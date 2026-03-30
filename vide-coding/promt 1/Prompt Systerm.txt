@@ -1,0 +1,27 @@
+Tôi muốn xây dựng một ứng dụng Nutrition Management từ đầu trong một folder hoàn toàn trống.
+
+Yêu cầu chức năng chính:
+1. Người dùng nhập chiều cao, cân nặng, tuổi, giới tính. Hệ thống tính BMI và lưu vào database.
+2. Dựa vào BMI và mục tiêu (tăng cân / giảm cân / giữ cân), hệ thống gợi ý lượng calo cần nạp và thực đơn ăn uống theo ngày/tuần/tháng/năm.
+3. Người dùng có thể chụp ảnh món ăn hoặc nhập thành phần món ăn. Hệ thống ước lượng lượng calo.
+4. Nếu người dùng không thích món ăn được gợi ý, hệ thống cho phép đổi sang món tương đương calo.
+5. Có dashboard theo dõi lịch sử cân nặng, calo nạp vào và biểu đồ tiến trình.
+
+Công nghệ sử dụng:
+- Frontend: Flutter
+- Backend: Spring Boot
+- Database: PostgreSQL
+- Image storage / image analysis input: Cloudinary
+- LLM API: Gemini API
+- Có thể dùng LangChain nếu hợp lý
+
+Nhiệm vụ của bạn:
+1. Phân tích bài toán như một software architect
+2. Đề xuất kiến trúc tổng thể production-ready
+3. Đề xuất folder structure cho frontend và backend
+4. Liệt kê các module backend cần có
+5. Liệt kê các màn hình frontend cần có
+6. Thiết kế database entities chính
+7. Thiết kế các REST API cần có
+8. Chỉ trả lời bằng kế hoạch chi tiết, chưa code
+9. Ưu tiên kiến trúc sạch, dễ mở rộng, phù hợp đồ án sinh viên nhưng có chất lượng tốt
