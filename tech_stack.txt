@@ -1,0 +1,269 @@
+Tech
+ 
+stack
+ 
+1. 
+Backend
+ (
+Microservices
+)
+NestJS
+ 
+TypeScript
+ 
+Lý do:
+hỗ trợ 
+microservices
+ 
+architecture
+ tốt 
+structure
+ rõ ràng (
+Module
+ / 
+Controller
+ / 
+Service
+) 
+dễ 
+scale
+ theo từng 
+service
+ 
+2. API 
+Gateway
+NestJS
+ (
+NestJS
+ 
+Gateway
+ 
+module
+) 
+Vai trò:
+Entry
+ 
+point
+ duy nhất cho 
+client
+ 
+Routing
+ 
+request
+ đến các 
+microservices
+ 
+Xác thực JWT (
+authentication
+/
+authorization
+) 
+Rate
+ 
+limiting
+ / 
+logging
+ 
+3. 
+Database
+ (
+Distributed
+ 
+Database
+ 
+per
+ 
+Service
+)
+PostgreSQL
+ 
+Kiến trúc:
+Mỗi 
+microservice
+ sở hữu 
+database
+ riêng (
+database
+ 
+per
+ 
+service
+ 
+pattern
+) 
+Ví dụ:
+Auth
+ 
+Service
+ → 
+auth_db
+ 
+Transaction
+ 
+Service
+ → 
+transaction_db
+ 
+Insight
+ 
+Service
+ → 
+insight_db
+ 
+ORM:
+Prisma
+ (khuyến nghị nếu bạn đang dùng) 
+4. AI 
+Service
+OCR
+ (
+Image
+ / 
+Document
+ 
+Processing
+)
+Azure
+ 
+Form
+ 
+Recognizer
+hoặc 
+Google
+ 
+Cloud
+ 
+Vision
+ AI 
+Chức năng:
+scan
+ hóa đơn / 
+screenshot
+ 
+extract
+ 
+text
+ + 
+amount
+ 
+Insight
+ (AI phân tích tài chính)
+OpenAI
+ API 
+Chức năng:
+phân tích hành vi chi tiêu 
+generate
+ 
+insight
+ / 
+recommendation
+ 
+5. 
+Message
+ 
+Queue
+ (
+Async
+ 
+Processing
+)
+RabbitMQ
+ 
+Vai trò:
+xử lý AI 
+async
+ (không 
+block
+ 
+request
+) 
+tách 
+transaction
+ 
+service
+ và AI 
+service
+ 
+Use
+ 
+case
+:
+upload
+ ảnh → gửi 
+message
+ → AI xử lý → trả kết quả 
+6. 
+Image
+ 
+Storage
+Cloudinary
+ 
+Chức năng:
+lưu ảnh hóa đơn / 
+screenshot
+ 
+trả URL cho 
+backend
+ xử lý AI 
+7. 
+Container
+ & 
+Deployment
+Docker
+ 
+Vai trò:
+đóng gói từng 
+microservice
+ thành 
+container
+ 
+chạy độc lập từng 
+service
+ 
+8. 
+Testing
+Jest
+ (
+built
+-in trong 
+NestJS
+) 
+Áp dụng:
+Unit
+ 
+test
+ (
+service
+ 
+logic
+) 
+Integration
+ 
+test
+ (API 
+endpoints
+) 
+9. CI/CD 
+Pipeline
+Source
+ 
+Control
+GitHub
+ 
+CI/CD 
+Tool
+GitHub
+ 
+Actions
+ 
+Container
+ 
+Build
+Docker
+ 
+Container
+ 
+Registry
+Docker
+ 
+Hub

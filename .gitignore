@@ -1,0 +1,22 @@
+# Project Specific
+S.Budget/node_modules/
+S.Budget/dist/
+S.Budget/.env
+S.Budget/.env.*
+S.Budget/apps/*/prisma/migrations/
+
+# Session/Logs (Antigravity)
+prompts/
+results/
+implementation_plan.md
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,176 @@
+User stories S.Budget
+Tóm tắt
+User stories S.Budget
+1
+EPIC 1: Ghi nhận giao dịch (Transaction Capture)
+1
+US-02: Upload ảnh để tạo giao dịch
+1
+US-03: Share screenshot vào app (UX chính)
+1
+US-04: Chụp ảnh trực tiếp trong app
+2
+EPIC 2: AI xử lý & tự động hóa
+3
+US-05: OCR đọc nội dung ảnh
+3
+US-06: Nhận diện số tiền
+3
+US-07: Phân loại chi tiêu tự động
+3
+US-08: Gợi ý giao dịch khi mở app (smart UX)
+3
+EPIC 3: Quản lý tài chính
+5
+US-09: Xem danh sách giao dịch
+5
+US-10: Chỉnh sửa giao dịch
+5
+US-11: Xóa giao dịch
+5
+EPIC 4: Insight & phân tích (AI value)
+6
+US-12: Thống kê chi tiêu
+6
+US-13: Phát hiện hành vi chi tiêu
+6
+US-14: Gợi ý tiết kiệm (AI)
+6
+EPIC 5: Hệ thống & bảo mật
+7
+US-15: Đăng nhập / đăng ký
+7
+US-16: Bảo mật dữ liệu
+7
+EPIC 1: Ghi nhận giao dịch (Transaction Capture)
+US-01: Quick Add bằng text (core feature)
+User Story
+Là một người dùng, tôi muốn nhập nhanh một dòng như “80k cafe” để hệ thống tự hiểu và lưu giao dịch, để tôi không phải nhập nhiều trường.
+Acceptance Criteria
+Nhập “80k cafe” → tạo transaction: 
+amount = 80000 
+category
+ = 
+drink
+ 
+Hỗ trợ các format: 
+“100k ăn trưa” 
+“1tr tiền nhà” 
+Nếu parse fail → cho phép user chỉnh sửa
+US-02: Upload ảnh để tạo giao dịch
+User Story
+Là một người dùng, tôi muốn tải lên ảnh hóa đơn hoặc ảnh chụp màn hình để hệ thống tự động nhận diện thông tin chi tiêu.
+Acceptance Criteria
+User upload ảnh 
+Hệ thống: 
+OCR → extract text 
+detect amount 
+Hiển thị preview trước khi lưu 
+User có thể chỉnh sửa
+US-03: Share screenshot vào app (UX chính)
+User Story
+Là một người dùng, tôi muốn share ảnh screenshot từ điện thoại vào app để tạo giao dịch ngay mà không cần mở app trước.
+Acceptance Criteria
+App xuất hiện trong menu Share 
+Nhận imageUrl 
+Tự động chạy AI: 
+detect amount 
+detect nội dung 
+Hiển thị màn confirm nhanh (≤ 2 bước)
+US-04: Chụp ảnh trực tiếp trong app
+User Story
+Là một người dùng, tôi muốn chụp ảnh hóa đơn trực tiếp trong app để ghi nhận chi tiêu nhanh.
+Acceptance Criteria
+Có camera button 
+Chụp → auto upload 
+AI xử lý ngay
+EPIC 2: AI xử lý & tự động hóa
+US-05: OCR đọc nội dung ảnh
+User Story
+Là hệ thống, tôi cần đọc text từ ảnh để trích xuất thông tin giao dịch.
+Acceptance Criteria
+Trả về rawText 
+Xử lý được: 
+hóa đơn 
+screenshot chuyển khoản
+US-06: Nhận diện số tiền
+User Story
+Là hệ thống, tôi muốn tự động phát hiện số tiền từ text để giảm thao tác nhập của người dùng.
+Acceptance Criteria
+Nhận diện: 
+“80k” → 80000 
+“1.200.000” → 1200000 
+Nếu nhiều số → chọn số hợp lý nhất (rule-based)
+US-07: Phân loại chi tiêu tự động
+User Story
+Là hệ thống, tôi muốn phân loại giao dịch (ăn uống, mua sắm…) để hỗ trợ thống kê.
+Acceptance Criteria
+Input: text/note 
+Output: category + confidence 
+Nếu confidence thấp → yêu cầu user chọn
+US-08: Gợi ý giao dịch khi mở app (smart UX)
+User Story
+Là người dùng, tôi muốn app gợi ý các giao dịch từ ảnh gần đây để tôi không quên ghi chép.
+Acceptance Criteria
+Detect ảnh mới (screenshot/gallery) 
+Hiển thị: 
+ảnh preview 
+amount (AI đoán) 
+Có nút: 
+Add 
+Ignore
+EPIC 3: Quản lý tài chính
+US-09: Xem danh sách giao dịch
+User Story
+Là người dùng, tôi muốn xem danh sách các khoản thu/chi để theo dõi tài chính.
+Acceptance Criteria
+Hiển thị: 
+amount 
+category 
+date 
+Có filter: 
+theo ngày 
+theo category
+US-10: Chỉnh sửa giao dịch
+User Story
+Là người dùng, tôi muốn chỉnh sửa giao dịch khi AI nhận diện sai.
+Acceptance Criteria
+Edit: 
+amount 
+category 
+note 
+Save nhanh ≤ 1 thao tác 
+US-11: Xóa giao dịch
+User Story
+Là người dùng, tôi muốn xóa giao dịch không cần thiết.
+Acceptance Criteria
+Có confirm hoặc undo 
+Xóa mềm (soft delete)
+EPIC 4: Insight & phân tích (AI value)
+US-12: Thống kê chi tiêu
+User Story
+Là người dùng, tôi muốn xem tổng chi tiêu theo danh mục để hiểu mình tiêu tiền vào đâu.
+Acceptance Criteria
+Biểu đồ theo category 
+Tổng theo tháng
+US-13: Phát hiện hành vi chi tiêu
+User Story
+Là người dùng, tôi muốn biết thói quen chi tiêu của mình để điều chỉnh tài chính.
+Acceptance Criteria
+Insight: 
+“Bạn chi 40% cho ăn uống” 
+“Chi tiêu tăng so với tuần trước”
+US-14: Gợi ý tiết kiệm (AI)
+User Story
+Là người dùng, tôi muốn nhận gợi ý để tiết kiệm tiền dựa trên hành vi chi tiêu.
+Acceptance Criteria
+Generate insight từ data 
+Hiển thị dạng: 
+text recommendation
+EPIC 5: Hệ thống & bảo mật
+US-15: Đăng nhập / đăng ký
+User Story
+Là người dùng, tôi muốn có tài khoản để lưu dữ liệu cá nhân.
+US-16: Bảo mật dữ liệu
+User Story
+Là người dùng, tôi muốn dữ liệu tài chính của mình được bảo vệ an toàn.
