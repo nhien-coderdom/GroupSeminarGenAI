@@ -6,8 +6,6 @@ S.Budget/.env.*
 S.Budget/apps/*/prisma/migrations/
 
 # Session/Logs (Antigravity)
-prompts/
-results/
 implementation_plan.md
 
 # IDE
