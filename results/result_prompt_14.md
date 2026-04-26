@@ -1,467 +1,479 @@
-# BÁO CÁO DỰ ÁN S.BUDGET
 # CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
 
 ---
 
-## 2.1 Tổng Quan Về Đề Tài
+## 2.1. Kiến trúc hệ thống
 
-### 2.1.1 Quản lý tài chính cá nhân là gì?
+### 2.1.1. Microservices Architecture
 
-Quản lý tài chính cá nhân (Personal Finance Management – PFM) là quá trình hoạch định, theo dõi, kiểm soát và tối ưu hóa các dòng tiền thu – chi của một cá nhân hoặc hộ gia đình nhằm đạt được các mục tiêu tài chính ngắn hạn và dài hạn. Đây là một lĩnh vực quan trọng trong kinh tế học hành vi và đã được nghiên cứu rộng rãi trong thập kỷ vừa qua.
+**Khái niệm:**
 
-Theo Garman & Forgue (2021), quản lý tài chính cá nhân hiệu quả bao gồm sáu hoạt động cốt lõi:
+Microservices là một kiểu kiến trúc phần mềm trong đó ứng dụng được phân chia thành nhiều dịch vụ nhỏ, độc lập, mỗi dịch vụ thực hiện một chức năng nghiệp vụ cụ thể và giao tiếp với nhau qua API (thường là REST hoặc Message Queue).
 
-1. **Lập ngân sách (Budgeting)**: Phân bổ thu nhập cho các mục chi tiêu theo kế hoạch.
-2. **Theo dõi chi tiêu (Expense Tracking)**: Ghi nhận và phân loại các giao dịch tài chính.
-3. **Tiết kiệm (Saving)**: Tích lũy một phần thu nhập để dự phòng hoặc đầu tư.
-4. **Quản lý nợ (Debt Management)**: Kiểm soát các khoản vay và trả nợ đúng hạn.
-5. **Đầu tư (Investing)**: Sử dụng phần tiết kiệm để sinh lời theo thời gian.
-6. **Kế hoạch dài hạn (Long-term Planning)**: Hướng đến hưu trí, mua nhà, giáo dục con cái.
+Trong hệ thống S.Budget, các microservice bao gồm:
 
-### 2.1.2 Vai trò của ứng dụng PFM trong thời đại số
-
-Với sự bùng nổ của smartphone và công nghệ tài chính (FinTech), các ứng dụng PFM đã trở thành công cụ đắc lực giúp người dùng:
-
-- Tự động hóa việc theo dõi chi tiêu.
-- Nhận báo cáo và biểu đồ trực quan theo thời gian thực.
-- Được tư vấn tài chính thông minh dựa trên dữ liệu cá nhân.
-- Đặt mục tiêu tiết kiệm và nhận nhắc nhở tự động.
-
-**S.Budget** được xây dựng trong bối cảnh đó, với mục tiêu cung cấp một nền tảng PFM toàn diện, thân thiện và phù hợp với thói quen tài chính của người dùng Việt Nam.
-
----
-
-## 2.2 Các Khái Niệm và Lý Thuyết Liên Quan
-
-### 2.2.1 Mô hình ngân sách 50/30/20
-
-Một trong những phương pháp lập ngân sách phổ biến nhất là **quy tắc 50/30/20** do Elizabeth Warren đề xuất:
-
-| Tỷ lệ | Danh mục | Ví dụ |
-|---|---|---|
-| 50% | Nhu cầu thiết yếu | Ăn uống, thuê nhà, điện nước, đi lại |
-| 30% | Mong muốn cá nhân | Giải trí, du lịch, mua sắm |
-| 20% | Tiết kiệm & trả nợ | Tiết kiệm, đầu tư, trả nợ vay |
-
-S.Budget áp dụng mô hình này làm nền tảng để gợi ý phân bổ ngân sách cho người dùng mới.
-
-### 2.2.2 Kiến trúc Client – Server
-
-S.Budget hoạt động theo mô hình **Client–Server** hai tầng:
-
-- **Client (Frontend)**: Giao diện người dùng chạy trên trình duyệt web hoặc thiết bị di động, chịu trách nhiệm hiển thị dữ liệu và thu thập thao tác người dùng.
-- **Server (Backend)**: Xử lý logic nghiệp vụ, xác thực, truy vấn cơ sở dữ liệu và trả về kết quả thông qua API.
-
-### 2.2.3 RESTful API
-
-**REST (Representational State Transfer)** là một kiểu kiến trúc phần mềm sử dụng giao thức HTTP để trao đổi dữ liệu giữa client và server. Các phương thức HTTP chính được sử dụng:
-
-| Phương thức | Ý nghĩa | Ví dụ trong S.Budget |
-|---|---|---|
-| GET | Lấy dữ liệu | Lấy danh sách giao dịch |
-| POST | Tạo mới dữ liệu | Thêm giao dịch mới |
-| PUT/PATCH | Cập nhật dữ liệu | Sửa thông tin giao dịch |
-| DELETE | Xóa dữ liệu | Xóa giao dịch |
-
-### 2.2.4 JSON Web Token (JWT)
-
-JWT là tiêu chuẩn xác thực phi trạng thái (stateless), gồm ba phần: **Header**, **Payload** và **Signature**, được mã hóa theo chuẩn Base64URL và ký bằng thuật toán HMAC hoặc RSA. S.Budget dùng JWT để quản lý phiên đăng nhập mà không cần lưu session phía server.
-
-### 2.2.5 Machine Learning trong phân tích tài chính
-
-S.Budget áp dụng một số kỹ thuật học máy cơ bản:
-
-- **Phân loại (Classification)**: Tự động gán danh mục cho giao dịch dựa trên mô tả.
-- **Phân tích chuỗi thời gian (Time Series Analysis)**: Dự báo chi tiêu theo xu hướng lịch sử.
-- **Phát hiện bất thường (Anomaly Detection)**: Cảnh báo khi có giao dịch bất thường so với thói quen.
-
----
-
-## 2.3 Các Công Nghệ Sử Dụng Trong Đồ Án
-
-### 2.3.1 React.js (Frontend Web)
-
-**React.js** là thư viện JavaScript mã nguồn mở do Meta (Facebook) phát triển, ra mắt năm 2013. React sử dụng mô hình **Component-based Architecture** và **Virtual DOM** để tối ưu hiệu năng render giao diện.
+| Service | Chức năng |
+|---------|-----------|
+| **Auth Service** | Xử lý đăng ký, đăng nhập, cấp phát và xác thực JWT token |
+| **Transaction Service** | Quản lý toàn bộ nghiệp vụ giao dịch tài chính (CRUD) |
+| **AI Service** | Nhận ảnh từ người dùng, gọi OCR, trả về kết quả đã phân tích |
+| **Insight Service** | Gọi OpenAI API để phân tích hành vi chi tiêu và sinh recommendation |
 
 **Ưu điểm:**
-- Tái sử dụng component cao, dễ bảo trì.
-- Virtual DOM giảm thiểu thao tác DOM thực, tăng tốc render.
-- Hệ sinh thái lớn: Redux, React Router, React Query.
-- Hỗ trợ SSR qua Next.js, tăng SEO.
+- **Scale độc lập**: Từng service có thể được triển khai và mở rộng tài nguyên riêng biệt theo nhu cầu thực tế mà không ảnh hưởng toàn hệ thống.
+- **Dễ maintain**: Mỗi service là một codebase độc lập, dễ kiểm thử, cập nhật và thay thế mà không gây downtime toàn hệ thống.
 
-**Code minh họa – Component quản lý giao dịch:**
+**Nhược điểm:**
+- **Phức tạp hơn Monolith**: Cần quản lý nhiều service, cấu hình mạng, service discovery và distributed tracing, đòi hỏi kinh nghiệm DevOps nhất định.
 
-```jsx
-// TransactionCard.jsx
-import React from 'react';
-
-const TransactionCard = ({ transaction }) => {
-  const { title, amount, category, date, type } = transaction;
-
-  return (
-    <div className={`transaction-card ${type === 'expense' ? 'expense' : 'income'}`}>
-      <div className="transaction-icon">
-        <span>{getCategoryIcon(category)}</span>
-      </div>
-      <div className="transaction-info">
-        <h4>{title}</h4>
-        <p>{category} · {new Date(date).toLocaleDateString('vi-VN')}</p>
-      </div>
-      <div className="transaction-amount">
-        <span>{type === 'expense' ? '-' : '+'}{amount.toLocaleString('vi-VN')}đ</span>
-      </div>
-    </div>
-  );
-};
-
-export default TransactionCard;
+```typescript
+// Ví dụ: Khởi tạo một Microservice trong NestJS
+const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  TransactionModule,
+  {
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'transaction_queue',
+    },
+  },
+);
+await app.listen();
 ```
-
-**Giải thích:** Component `TransactionCard` nhận vào một đối tượng `transaction` qua props, hiển thị thông tin giao dịch với màu sắc khác nhau tùy loại thu/chi. Trong S.Budget, component này được dùng để render danh sách giao dịch ở màn hình Dashboard và Lịch sử giao dịch.
+*Đoạn code trên minh họa cách một Transaction Service lắng nghe message từ RabbitMQ Queue thay vì HTTP trực tiếp, giúp tách biệt hoàn toàn với các service khác.*
 
 ---
 
-### 2.3.2 Node.js & Express.js (Backend)
+### 2.1.2. API Gateway
 
-**Node.js** là môi trường chạy JavaScript phía server, dựa trên V8 Engine của Chrome, sử dụng mô hình **non-blocking I/O** và **event-driven**. **Express.js** là framework web tối giản chạy trên Node.js, hỗ trợ xây dựng RESTful API nhanh chóng.
+**Khái niệm:**
 
-**Ưu điểm:**
-- Xử lý đồng thời nhiều request mà không cần tạo thread mới.
-- Dùng JavaScript cả frontend lẫn backend, thống nhất tech stack.
-- Tốc độ phát triển nhanh, cộng đồng lớn (npm với hơn 1.8 triệu package).
+API Gateway là điểm tiếp nhận duy nhất (single entry point) cho toàn bộ request từ phía client. Thay vì client gọi trực tiếp vào từng microservice, mọi request đều đi qua Gateway để được xử lý tập trung.
 
-**Code minh họa – Route API giao dịch:**
+Trong S.Budget, API Gateway được xây dựng bằng **NestJS** với các vai trò:
 
-```javascript
-// routes/transaction.route.js
-const express = require('express');
-const router = express.Router();
-const authMiddleware = require('../middleware/auth');
-const TransactionController = require('../controllers/transaction.controller');
+- **Routing request**: Điều hướng request đến đúng microservice tương ứng.
+- **Authentication (JWT)**: Xác thực token trước khi cho phép request đi tiếp.
+- **Logging**: Ghi lại toàn bộ request/response để phục vụ monitoring và debug.
 
-// GET /api/transactions - Lấy danh sách giao dịch của user
-router.get('/', authMiddleware, TransactionController.getAll);
-
-// POST /api/transactions - Thêm giao dịch mới
-router.post('/', authMiddleware, TransactionController.create);
-
-// PUT /api/transactions/:id - Cập nhật giao dịch
-router.put('/:id', authMiddleware, TransactionController.update);
-
-// DELETE /api/transactions/:id - Xóa giao dịch
-router.delete('/:id', authMiddleware, TransactionController.delete);
-
-module.exports = router;
-```
-
-```javascript
-// controllers/transaction.controller.js
-const Transaction = require('../models/Transaction');
-
-exports.getAll = async (req, res) => {
-  try {
-    const transactions = await Transaction.find({ userId: req.user.id })
-      .sort({ date: -1 })
-      .limit(50);
-    res.json({ success: true, data: transactions });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+```typescript
+// API Gateway - Guard xác thực JWT
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  canActivate(context: ExecutionContext) {
+    return super.canActivate(context);
   }
-};
+}
 
-exports.create = async (req, res) => {
-  try {
-    const transaction = new Transaction({
-      ...req.body,
-      userId: req.user.id
-    });
-    await transaction.save();
-    res.status(201).json({ success: true, data: transaction });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+// Controller điều hướng request đến Transaction Service
+@Controller('transactions')
+@UseGuards(JwtAuthGuard)
+export class GatewayTransactionController {
+  constructor(private readonly client: ClientProxy) {}
+
+  @Post()
+  createTransaction(@Body() dto: CreateTransactionDto, @Request() req) {
+    return this.client.send('create_transaction', { dto, userId: req.user.id });
   }
-};
+}
 ```
-
-**Giải thích:** Route `/api/transactions` sử dụng `authMiddleware` để xác thực JWT trước khi cho phép truy cập. Controller `getAll` truy vấn MongoDB lấy 50 giao dịch gần nhất của user, sắp xếp theo ngày giảm dần. Trong S.Budget, đây là API cốt lõi phục vụ màn hình Dashboard và Lịch sử.
+*Guard kiểm tra JWT token trước mỗi request; nếu hợp lệ mới forward sang Transaction Service qua message pattern.*
 
 ---
 
-### 2.3.3 MongoDB (Cơ sở dữ liệu)
+### 2.1.3. Database per Service
 
-**MongoDB** là hệ quản trị cơ sở dữ liệu NoSQL dạng tài liệu (document-oriented), lưu trữ dữ liệu theo định dạng BSON (Binary JSON). MongoDB phù hợp với các ứng dụng cần schema linh hoạt và khả năng mở rộng ngang (horizontal scaling).
+**Khái niệm:**
 
-**Ưu điểm:**
-- Schema linh hoạt: dễ thêm trường mới mà không cần migration.
-- Hiệu năng cao với dữ liệu phi quan hệ.
-- Tích hợp tốt với Node.js qua Mongoose ODM.
+Mỗi microservice sở hữu cơ sở dữ liệu riêng biệt, không chia sẻ schema hay kết nối DB với service khác. Đây là pattern cốt lõi trong kiến trúc Microservices, giúp đảm bảo tính độc lập và tránh coupling.
 
-**Code minh họa – Schema giao dịch với Mongoose:**
+Trong S.Budget:
 
-```javascript
-// models/Transaction.js
-const mongoose = require('mongoose');
+| Database | Thuộc service | Dữ liệu quản lý |
+|----------|---------------|-----------------|
+| `auth_db` | Auth Service | Thông tin tài khoản, refresh token |
+| `transaction_db` | Transaction Service | Giao dịch, danh mục, ngân sách |
+| `insight_db` | Insight Service | Kết quả phân tích, lịch sử insight |
 
-const transactionSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  title: {
-    type: String,
-    required: [true, 'Tiêu đề giao dịch là bắt buộc'],
-    trim: true,
-    maxlength: 100
-  },
-  amount: {
-    type: Number,
-    required: [true, 'Số tiền là bắt buộc'],
-    min: [0, 'Số tiền không thể âm']
-  },
-  type: {
-    type: String,
-    enum: ['income', 'expense'],
-    required: true
-  },
-  category: {
-    type: String,
-    enum: ['food', 'transport', 'entertainment', 'health',
-           'education', 'shopping', 'salary', 'other'],
-    required: true
-  },
-  note: { type: String, maxlength: 500 },
-  date: { type: Date, default: Date.now }
-}, {
-  timestamps: true
-});
-
-// Index để tối ưu query theo userId và date
-transactionSchema.index({ userId: 1, date: -1 });
-
-module.exports = mongoose.model('Transaction', transactionSchema);
-```
-
-**Giải thích:** Schema định nghĩa cấu trúc dữ liệu cho mỗi giao dịch. Trường `userId` tạo liên kết với collection `User`. Việc đánh index trên `{ userId: 1, date: -1 }` giúp tối ưu tốc độ truy vấn khi lọc giao dịch theo người dùng và sắp xếp theo thời gian – đây là pattern truy vấn phổ biến nhất trong S.Budget.
+**Lợi ích**: Khi Transaction Service bị lỗi, Auth Service vẫn hoạt động bình thường. Mỗi service có thể chọn loại database phù hợp nhất với nghiệp vụ (PostgreSQL, MongoDB, Redis...).
 
 ---
 
-### 2.3.4 Firebase Authentication (Xác thực)
+### 2.1.4. Message Queue (RabbitMQ)
 
-**Firebase Authentication** là dịch vụ xác thực của Google, hỗ trợ đăng nhập qua Email/Password, Google, Facebook, Apple và nhiều nhà cung cấp khác. Firebase xử lý toàn bộ luồng xác thực bảo mật, giúp nhóm phát triển tập trung vào nghiệp vụ chính.
+**Khái niệm:**
 
-**Ưu điểm:**
-- Triển khai nhanh, bảo mật cao (tuân thủ OAuth 2.0, OpenID Connect).
-- Tích hợp sẵn tính năng đặt lại mật khẩu, xác minh email.
-- Free tier hào phóng: 10.000 xác thực/tháng.
+Message Queue là cơ chế xử lý bất đồng bộ (asynchronous), trong đó producer gửi message vào queue mà không cần chờ consumer xử lý xong. Consumer nhận và xử lý message theo tốc độ riêng.
 
-**Code minh họa – Đăng nhập bằng Google:**
+**Lý do sử dụng trong S.Budget:**
 
-```javascript
-// services/auth.service.js
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
+Quá trình OCR và phân tích AI mất nhiều thời gian (1–5 giây). Nếu xử lý đồng bộ, request của người dùng sẽ bị block trong khi chờ. Với RabbitMQ:
 
-const auth = getAuth();
-const googleProvider = new GoogleAuthProvider();
+```
+Upload ảnh → API Gateway → gửi message vào queue
+                                    ↓
+                             AI Service nhận message
+                                    ↓
+                        OCR xử lý → lưu kết quả
+                                    ↓
+                     Notification Service thông báo user
+```
 
-export const signInWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
-    const idToken = await user.getIdToken();
+```typescript
+// Producer: Transaction Service gửi job vào queue
+@Injectable()
+export class TransactionService {
+  constructor(@InjectQueue('ai-processing') private aiQueue: Queue) {}
 
-    // Gửi idToken lên backend để xác minh và tạo session
-    const response = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken })
-    });
-
-    return await response.json();
-  } catch (error) {
-    console.error('Lỗi đăng nhập Google:', error.message);
-    throw error;
+  async processImage(imageUrl: string, userId: string) {
+    await this.aiQueue.add('ocr-job', { imageUrl, userId });
+    return { status: 'processing', message: 'Ảnh đang được xử lý' };
   }
-};
-```
+}
 
-**Giải thích:** Hàm `signInWithGoogle` mở popup xác thực Google, nhận về `idToken` từ Firebase rồi gửi lên backend để xác minh. Backend dùng Firebase Admin SDK để verify token, sau đó tạo JWT riêng của ứng dụng. Luồng này đảm bảo tính bảo mật hai lớp trong S.Budget.
+// Consumer: AI Service xử lý job
+@Processor('ai-processing')
+export class AiProcessor {
+  @Process('ocr-job')
+  async handleOcr(job: Job<{ imageUrl: string; userId: string }>) {
+    const result = await this.ocrService.extractText(job.data.imageUrl);
+    await this.saveTransaction(result, job.data.userId);
+  }
+}
+```
+*Producer trả về ngay lập tức sau khi enqueue; Consumer xử lý OCR trong nền, tránh blocking UX của người dùng.*
 
 ---
 
-### 2.3.5 Python & Scikit-learn (Module AI phân tích chi tiêu)
+### 2.1.5. AI & OCR
 
-Module AI của S.Budget được xây dựng bằng **Python** sử dụng thư viện **Scikit-learn** để phân loại giao dịch tự động và dự báo chi tiêu.
+**OCR (Optical Character Recognition):**
 
-**Code minh họa – Phân loại danh mục giao dịch:**
+OCR là công nghệ nhận dạng và trích xuất văn bản từ ảnh. Trong S.Budget, khi người dùng chụp ảnh hóa đơn, hệ thống gửi ảnh đến **Google Vision API** để trích xuất text, sau đó parse số tiền và mô tả.
 
-```python
-# ai/category_classifier.py
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import Pipeline
-import pickle
-
-class CategoryClassifier:
-    def __init__(self):
-        self.model = Pipeline([
-            ('tfidf', TfidfVectorizer(ngram_range=(1, 2))),
-            ('clf', MultinomialNB(alpha=0.1))
-        ])
-
-    def train(self, descriptions, labels):
-        """Huấn luyện mô hình phân loại danh mục."""
-        self.model.fit(descriptions, labels)
-
-    def predict(self, description: str) -> str:
-        """Dự đoán danh mục cho một giao dịch."""
-        return self.model.predict([description])[0]
-
-    def save(self, path: str):
-        with open(path, 'wb') as f:
-            pickle.dump(self.model, f)
-
-    @classmethod
-    def load(cls, path: str):
-        instance = cls()
-        with open(path, 'rb') as f:
-            instance.model = pickle.load(f)
-        return instance
-
-
-# Ví dụ sử dụng
-if __name__ == '__main__':
-    classifier = CategoryClassifier()
-
-    # Dữ liệu huấn luyện mẫu
-    descriptions = [
-        "Grab từ nhà đến trường", "Xăng xe máy", "Vé xe buýt",
-        "Cơm trưa", "Cafe sáng", "Đi ăn buffet",
-        "Học phí kỳ 2", "Mua sách lập trình", "Khóa học online"
-    ]
-    labels = ['transport', 'transport', 'transport',
-              'food', 'food', 'food',
-              'education', 'education', 'education']
-
-    classifier.train(descriptions, labels)
-    print(classifier.predict("Mua cơm hộp văn phòng"))  # → food
-    print(classifier.predict("Đổ xăng xe"))              # → transport
+```typescript
+async extractText(imageBase64: string): Promise<string> {
+  const [result] = await this.visionClient.textDetection({
+    image: { content: imageBase64 },
+  });
+  return result.fullTextAnnotation?.text || '';
+}
 ```
 
-**Giải thích:** Mô hình dùng **TF-IDF** để vector hóa mô tả giao dịch và **Naive Bayes** để phân loại. Pipeline kết hợp hai bước thành một luồng xử lý liền mạch. Trong S.Budget, khi người dùng nhập mô tả giao dịch, model sẽ tự động gợi ý danh mục phù hợp, tiết kiệm thao tác nhập liệu thủ công.
+**NLP / AI Insight (OpenAI API):**
 
----
+Sau khi có dữ liệu giao dịch, hệ thống gọi OpenAI API để:
+- **Phân tích chi tiêu**: Nhận diện xu hướng, danh mục chi tiêu nhiều nhất.
+- **Generate recommendation**: Đưa ra gợi ý cắt giảm chi tiêu phù hợp với hành vi người dùng.
 
-## 2.4 Minh Họa Kiến Trúc Hệ Thống
+```typescript
+async generateInsight(transactions: Transaction[]): Promise<string> {
+  const prompt = `Phân tích dữ liệu chi tiêu sau và đưa ra gợi ý tiết kiệm:
+  ${JSON.stringify(transactions)}`;
 
-### 2.4.1 Kiến trúc tổng thể
-
-S.Budget được xây dựng theo kiến trúc **3-tier (3 tầng)**:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                   TẦNG TRÌNH DIỄN (CLIENT)              │
-│         React.js Web App  │  React Native Mobile App    │
-└──────────────────────┬──────────────────────────────────┘
-                       │ HTTPS / REST API / WebSocket
-┌──────────────────────▼──────────────────────────────────┐
-│                   TẦNG XỬ LÝ (SERVER)                   │
-│   Node.js + Express.js API Server                       │
-│   ┌─────────────┐  ┌──────────────┐  ┌───────────────┐  │
-│   │ Auth Service│  │Transaction   │  │  AI/ML Service│  │
-│   │ (Firebase)  │  │Service       │  │  (Python API) │  │
-│   └─────────────┘  └──────────────┘  └───────────────┘  │
-└──────────────────────┬──────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────┐
-│                   TẦNG DỮ LIỆU (DATA)                   │
-│   MongoDB Atlas (Giao dịch, Ngân sách, Người dùng)      │
-│   Firebase (Authentication, Push Notifications)         │
-└─────────────────────────────────────────────────────────┘
-```
-
-### 2.4.2 Luồng xử lý thêm giao dịch
-
-```
-Người dùng nhập giao dịch
-        │
-        ▼
-React App gọi POST /api/transactions
-        │
-        ▼
-authMiddleware xác thực JWT
-        │
-        ▼
-AI Service dự đoán danh mục (nếu chưa chọn)
-        │
-        ▼
-Controller lưu vào MongoDB
-        │
-        ▼
-Kiểm tra vượt ngân sách → Gửi Push Notification (nếu có)
-        │
-        ▼
-Trả về response → Cập nhật UI
+  const response = await this.openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [{ role: 'user', content: prompt }],
+  });
+  return response.choices[0].message.content;
+}
 ```
 
 ---
 
-## 2.5 Khảo Sát Các Dự Án / Hệ Thống Liên Quan
+### 2.1.6. JWT Authentication
 
-### 2.5.1 Bảng so sánh các ứng dụng PFM
+**Cách hoạt động:**
 
-| Tiêu chí | **Mint** (Intuit) | **Money Lover** | **YNAB** | **S.Budget** |
-|---|---|---|---|---|
-| Nền tảng | iOS, Android, Web | iOS, Android | iOS, Android, Web | iOS, Android, Web |
-| Ngôn ngữ | Tiếng Anh | Đa ngôn ngữ (có VI) | Tiếng Anh | Tiếng Việt |
-| Miễn phí | Có (quảng cáo) | Freemium | Trả phí ($14.99/tháng) | Freemium |
-| Kết nối ngân hàng | Có (Mỹ) | Không | Có | Không (v1) |
-| AI gợi ý | Cơ bản | Không | Không | Có |
-| Phù hợp VN | Không | Một phần | Không | Có |
+JWT (JSON Web Token) là chuẩn xác thực stateless, gồm 3 phần: Header, Payload, Signature.
 
-### 2.5.2 Phân tích chi tiết từng dự án
+```
+Luồng xác thực:
+1. User login → Auth Service xác thực → cấp Access Token (15 phút) + Refresh Token (7 ngày)
+2. Client gửi request kèm Authorization: Bearer <token>
+3. API Gateway verify token → nếu hợp lệ → forward request đến service tương ứng
+4. Token hết hạn → dùng Refresh Token để lấy Access Token mới
+```
 
-**1. Mint (Intuit)**
-
-- **Ưu điểm**: Tích hợp ngân hàng tự động, biểu đồ phong phú, cảnh báo thông minh.
-- **Hạn chế**: Chỉ hỗ trợ tài khoản ngân hàng Mỹ, không phù hợp người dùng Việt Nam. Đã ngừng hoạt động từ tháng 1/2024.
-- **Bài học**: Cần có kế hoạch dài hạn cho dịch vụ; tích hợp ngân hàng là lợi thế cạnh tranh lớn.
-
-**2. Money Lover**
-
-- **Ưu điểm**: Giao diện thân thiện, hỗ trợ tiếng Việt, phổ biến tại Đông Nam Á.
-- **Hạn chế**: Tính năng AI hạn chế, phiên bản miễn phí bị cắt nhiều tính năng quan trọng, UX chưa hiện đại.
-- **Bài học**: Cần cân bằng giữa freemium và trải nghiệm người dùng; không nên hạn chế quá nhiều ở bản free.
-
-**3. YNAB (You Need A Budget)**
-
-- **Ưu điểm**: Phương pháp ngân sách zero-based rõ ràng, cộng đồng người dùng mạnh, giáo dục tài chính tốt.
-- **Hạn chế**: Chi phí cao, đường cong học tập dốc, không phù hợp người mới.
-- **Bài học**: UX đơn giản và onboarding tốt là yếu tố then chốt để giữ chân người dùng mới.
-
-### 2.5.3 Bài học rút ra cho S.Budget
-
-Từ việc khảo sát các hệ thống trên, nhóm rút ra những định hướng phát triển cho S.Budget:
-
-1. **Ưu tiên UX đơn giản**: Người dùng Việt Nam, đặc biệt là sinh viên, cần giao diện trực quan, không cần đào tạo.
-2. **Freemium thông minh**: Phiên bản miễn phí phải đủ dùng để xây dựng thói quen, tính năng premium tạo giá trị thực sự.
-3. **AI là điểm khác biệt**: Không ứng dụng nào trong nước có AI phân tích chi tiêu đủ mạnh – đây là lợi thế cạnh tranh của S.Budget.
-4. **Bản địa hóa sâu**: Hỗ trợ VND, danh mục phù hợp thói quen Việt (lì xì, học phí, xe máy...).
+```typescript
+// Tạo JWT token sau khi đăng nhập thành công
+async login(user: User) {
+  const payload = { sub: user.id, email: user.email, role: user.role };
+  return {
+    access_token: this.jwtService.sign(payload, { expiresIn: '15m' }),
+    refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
+  };
+}
+```
 
 ---
 
-## 2.6 Kết Luận Chương
+### 2.1.7. ORM (Prisma)
 
-Chương 2 đã trình bày toàn diện cơ sở lý thuyết và nền tảng công nghệ của dự án S.Budget. Cụ thể:
+**Khái niệm ORM:**
 
-- **Về lý thuyết**: Các khái niệm về quản lý tài chính cá nhân, mô hình ngân sách 50/30/20, kiến trúc Client–Server, RESTful API và JWT đã được làm rõ, tạo nền tảng vững chắc cho quá trình thiết kế và triển khai.
+ORM (Object-Relational Mapping) là lớp trừu tượng giữa code ứng dụng và cơ sở dữ liệu quan hệ, cho phép thao tác dữ liệu thông qua các object/method thay vì viết SQL thuần.
 
-- **Về công nghệ**: Các công nghệ được lựa chọn gồm React.js, Node.js + Express.js, MongoDB, Firebase Authentication và Python/Scikit-learn đều được minh chứng bằng code cụ thể và giải thích ứng dụng thực tế trong đồ án.
+**Prisma** được chọn trong S.Budget vì:
+- **Dễ thao tác DB**: API trực quan, dễ đọc, giảm boilerplate code.
+- **Type-safe**: Prisma tự động sinh TypeScript types từ schema, giúp phát hiện lỗi ngay lúc compile.
 
-- **Về khảo sát**: Qua phân tích ba ứng dụng PFM nổi bật (Mint, Money Lover, YNAB), nhóm xác định được khoảng trống thị trường mà S.Budget có thể khai thác: ứng dụng PFM tích hợp AI, bản địa hóa cho người dùng Việt Nam với trải nghiệm người dùng hiện đại và mô hình freemium hợp lý.
+```typescript
+// schema.prisma - Định nghĩa model Transaction
+model Transaction {
+  id         String   @id @default(cuid())
+  amount     Float
+  category   String
+  note       String?
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+}
 
-Những nền tảng lý thuyết và kỹ thuật này sẽ được áp dụng trực tiếp vào quá trình phân tích, thiết kế hệ thống được trình bày trong **Chương 3**.
+// Sử dụng Prisma Client - type-safe, không cần viết SQL
+async findByUser(userId: string): Promise<Transaction[]> {
+  return this.prisma.transaction.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+```
 
 ---
 
-*Tài liệu tham khảo chương này bao gồm: Garman & Forgue (2021), tài liệu chính thức của React.js, Node.js, MongoDB, Firebase và Scikit-learn.*
+### 2.1.8. Docker & CI/CD
+
+**Docker:**
+
+Docker là nền tảng đóng gói ứng dụng cùng toàn bộ dependencies vào container, đảm bảo môi trường chạy nhất quán từ development đến production.
+
+```dockerfile
+# Dockerfile cho một microservice NestJS
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+EXPOSE 3000
+CMD ["node", "dist/main"]
+```
+
+```yaml
+# docker-compose.yml - Orchestrate toàn bộ hệ thống
+services:
+  api-gateway:
+    build: ./apps/api-gateway
+    ports: ["3000:3000"]
+  auth-service:
+    build: ./apps/auth-service
+  transaction-service:
+    build: ./apps/transaction-service
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: ["5672:5672"]
+```
+
+**CI/CD (GitHub Actions):**
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy S.Budget
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker images
+        run: docker compose build
+      - name: Run tests
+        run: docker compose run --rm api-gateway npm test
+      - name: Deploy to server
+        run: docker compose up -d
+```
+*Mỗi khi push lên nhánh `main`, GitHub Actions tự động build, test và deploy toàn bộ hệ thống.*
+
+---
+
+## 2.2. Minh họa công nghệ
+
+### 2.2.1. Sơ đồ kiến trúc tổng thể
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Mobile App                           │
+└────────────────────────┬────────────────────────────────────┘
+                         │ HTTP/REST
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     API Gateway (NestJS)                     │
+│          JWT Verify │ Routing │ Rate Limiting │ Logging      │
+└──────┬──────────────┬─────────────┬───────────┬─────────────┘
+       │              │             │           │
+       ▼              ▼             ▼           ▼
+  ┌────────┐   ┌──────────────┐ ┌──────┐  ┌─────────┐
+  │  Auth  │   │  Transaction │ │  AI  │  │ Insight │
+  │Service │   │   Service    │ │Svc   │  │  Svc    │
+  └───┬────┘   └──────┬───────┘ └──┬───┘  └────┬────┘
+      │               │            │            │
+  ┌───┴──┐      ┌─────┴──┐    ┌───┴──┐    ┌────┴───┐
+  │auth  │      │transact│    │  -   │    │insight │
+  │ _db  │      │ion_db  │    │      │    │  _db   │
+  └──────┘      └────────┘    └──────┘    └────────┘
+                         ↑
+              ┌──────────┴──────────┐
+              │   RabbitMQ Queue    │
+              └─────────────────────┘
+```
+
+### 2.2.2. User Story
+
+| ID | Vai trò | Mục tiêu | Lợi ích |
+|----|---------|----------|---------|
+| US-01 | Người dùng | Nhập chi tiêu bằng text tự nhiên | Ghi nhận nhanh, không cần nhiều thao tác |
+| US-02 | Người dùng | Chụp ảnh hóa đơn để nhập tự động | Tiết kiệm thời gian, giảm sai sót |
+| US-03 | Người dùng | Xem thống kê chi tiêu theo tháng | Hiểu rõ thói quen tài chính |
+| US-04 | Người dùng | Nhận gợi ý tiết kiệm từ AI | Cải thiện hành vi chi tiêu |
+| US-05 | Người dùng | Đăng nhập an toàn | Bảo vệ dữ liệu tài chính cá nhân |
+
+### 2.2.3. Use Case Diagram (mô tả)
+
+**Actor chính**: Người dùng (User)
+
+**Các Use Case:**
+- Đăng ký / Đăng nhập tài khoản
+- Thêm giao dịch (text hoặc ảnh)
+- Xem danh sách giao dịch
+- Lọc/tìm kiếm giao dịch
+- Xem báo cáo & biểu đồ chi tiêu
+- Nhận insight tài chính từ AI
+
+### 2.2.4. Component Diagram (mô tả)
+
+```
+[Mobile App]
+    └── [API Gateway Component]
+            ├── [AuthModule] ──────► [Auth Service]
+            ├── [TransactionModule] ► [Transaction Service]
+            ├── [AIModule] ─────────► [AI Service] ──► [Google Vision API]
+            └── [InsightModule] ───► [Insight Service] ► [OpenAI API]
+```
+
+### 2.2.5. Database Design
+
+**auth_db** – Auth Service
+```sql
+Table users {
+  id         String  PK
+  email      String  UNIQUE
+  password   String  (hashed bcrypt)
+  createdAt  DateTime
+}
+Table refresh_tokens {
+  id        String  PK
+  token     String
+  userId    String  FK → users.id
+  expiresAt DateTime
+}
+```
+
+**transaction_db** – Transaction Service
+```sql
+Table transactions {
+  id        String  PK
+  userId    String
+  amount    Float
+  category  String
+  note      String
+  imageUrl  String  (nullable)
+  createdAt DateTime
+}
+Table categories {
+  id    String PK
+  name  String
+  icon  String
+}
+```
+
+**insight_db** – Insight Service
+```sql
+Table insights {
+  id          String  PK
+  userId      String
+  content     Text
+  period      String  (e.g. "2025-04")
+  generatedAt DateTime
+}
+```
+
+### 2.2.6. Data Flow Diagram (DFD)
+
+```
+Level 0 – Context Diagram:
+[Người dùng] ──nhập chi tiêu/ảnh──► [S.Budget System] ──► [Báo cáo & Insight]
+
+Level 1 – Main Processes:
+[Người dùng]
+    │
+    ├─ text input ─► [1. Xử lý nhập liệu] ─► transaction_db
+    │
+    ├─ image upload ► [2. OCR Processing] ──► Google Vision ──► [1.]
+    │
+    └─ xem báo cáo ► [3. Phân tích & Insight] ─► OpenAI ─► [Insight]
+```
+
+---
+
+## 2.3. Ứng dụng tham khảo
+
+### 2.3.1. Money Lover
+
+**Giới thiệu**: Ứng dụng quản lý tài chính cá nhân phổ biến tại Việt Nam và Đông Nam Á, phát triển bởi Finsify.
+
+| Tiêu chí | Đánh giá |
+|----------|----------|
+| **Ưu điểm** | Giao diện thân thiện, hỗ trợ nhiều ví, đồng bộ đa thiết bị, có báo cáo chi tiết |
+| **Hạn chế** | Không có tính năng AI tự động nhập liệu, nhập thủ công nhiều bước |
+| **Bài học** | Thiết kế danh mục chi tiêu linh hoạt; UX tối giản là yếu tố giữ chân người dùng |
+
+### 2.3.2. Spendee
+
+**Giới thiệu**: Ứng dụng quản lý ngân sách cá nhân và nhóm với thiết kế hiện đại, hỗ trợ kết nối tài khoản ngân hàng.
+
+| Tiêu chí | Đánh giá |
+|----------|----------|
+| **Ưu điểm** | Kết nối ngân hàng tự động, giao diện đẹp, hỗ trợ quản lý chi tiêu nhóm |
+| **Hạn chế** | Tính năng nâng cao yêu cầu trả phí, không có AI insight cá nhân hóa |
+| **Bài học** | Tự động hóa nhập liệu từ ngân hàng giảm đáng kể ma sát; tính năng nhóm tăng giá trị sản phẩm |
+
+### 2.3.3. CapMoney
+
+**Giới thiệu**: Ứng dụng quản lý tài chính cá nhân của Việt Nam, nổi bật với tính năng scan hóa đơn và nhập liệu tự động.
+
+| Tiêu chí | Đánh giá |
+|----------|----------|
+| **Ưu điểm** | Có tính năng scan hóa đơn bằng camera, giao diện tiếng Việt thân thiện |
+| **Hạn chế** | OCR còn hạn chế với hóa đơn phức tạp, thiếu AI insight phân tích sâu |
+| **Bài học** | OCR là tính năng nổi bật tạo khác biệt; cần kết hợp với NLP để nâng cao độ chính xác |
+
+### Bảng so sánh tổng hợp
+
+| Tiêu chí | Money Lover | Spendee | CapMoney | **S.Budget** |
+|----------|------------|---------|----------|-------------|
+| Nhập text tự nhiên | ❌ | ❌ | ❌ | ✅ |
+| OCR scan hóa đơn | ❌ | ❌ | ✅ (cơ bản) | ✅ (Google Vision) |
+| AI Insight cá nhân | ❌ | ❌ | ❌ | ✅ (OpenAI) |
+| Kiến trúc Microservices | ❌ | ❌ | ❌ | ✅ |
+| Mã nguồn mở / học thuật | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+*Chương tiếp theo sẽ trình bày thiết kế chi tiết hệ thống và phân tích yêu cầu phần mềm.*
