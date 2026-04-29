@@ -46,6 +46,10 @@ export const MESSAGE_PATTERNS = {
   TRANSACTION_DELETE: { cmd: 'transaction_delete' },
   TRANSACTION_FROM_IMAGE: { cmd: 'transaction_from_image' },
 
+  // Category
+  CATEGORY_FIND_ALL: { cmd: 'category_find_all' },
+
+
   // AI
   AI_OCR_PROCESS: { cmd: 'ai_ocr_process' },
   AI_DETECT_AMOUNT: { cmd: 'ai_detect_amount' },

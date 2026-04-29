@@ -3,58 +3,41 @@ import {
   Post,
   Body,
   Inject,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { AUTH_SERVICE } from '@app/shared/constants/index';
-import { MESSAGE_PATTERNS } from '@app/shared/constants/index';
+import { AUTH_SERVICE, MESSAGE_PATTERNS } from '@app/shared/constants/index';
 import { RegisterDto, LoginDto } from '@app/shared/dto/index';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('auth')
 export class AuthGatewayController {
   constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
 
+  /** Đăng ký tài khoản — public route, không cần JWT */
+  @Public()
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    try {
-      return await firstValueFrom(
-        this.authClient.send(MESSAGE_PATTERNS.AUTH_REGISTER, registerDto),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Registration failed',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    return firstValueFrom(
+      this.authClient.send(MESSAGE_PATTERNS.AUTH_REGISTER, registerDto),
+    );
   }
 
+  /** Đăng nhập — public route, không cần JWT */
+  @Public()
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    try {
-      return await firstValueFrom(
-        this.authClient.send(MESSAGE_PATTERNS.AUTH_LOGIN, loginDto),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Login failed',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+    return firstValueFrom(
+      this.authClient.send(MESSAGE_PATTERNS.AUTH_LOGIN, loginDto),
+    );
   }
 
+  /** Làm mới Access Token — public route (dùng Refresh Token, không dùng Access Token) */
+  @Public()
   @Post('refresh')
   async refresh(@Body('refreshToken') refreshToken: string) {
-    try {
-      return await firstValueFrom(
-        this.authClient.send(MESSAGE_PATTERNS.AUTH_REFRESH, { refreshToken }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Token refresh failed',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+    return firstValueFrom(
+      this.authClient.send(MESSAGE_PATTERNS.AUTH_REFRESH, { refreshToken }),
+    );
   }
 }

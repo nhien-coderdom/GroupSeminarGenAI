@@ -8,15 +8,27 @@ describe('TransactionServiceController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [TransactionServiceController],
-      providers: [TransactionServiceService],
+      providers: [
+        {
+          provide: TransactionServiceService,
+          useValue: {
+            create: jest.fn(),
+            quickAdd: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    transactionServiceController = app.get<TransactionServiceController>(TransactionServiceController);
+    transactionServiceController = app.get<TransactionServiceController>(
+      TransactionServiceController,
+    );
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(transactionServiceController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(transactionServiceController).toBeDefined();
   });
 });

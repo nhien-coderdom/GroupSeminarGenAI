@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   AUTH_SERVICE,
@@ -14,10 +16,15 @@ import {
 import { AuthGatewayController } from './controllers/auth.controller';
 import { TransactionGatewayController } from './controllers/transaction.controller';
 import { InsightGatewayController } from './controllers/insight.controller';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+
+    // JwtModule dùng để verify token trong JwtAuthGuard
+    JwtModule.register({}),
+
     ClientsModule.register([
       {
         name: AUTH_SERVICE,
@@ -61,6 +68,14 @@ import { InsightGatewayController } from './controllers/insight.controller';
     AuthGatewayController,
     TransactionGatewayController,
     InsightGatewayController,
+  ],
+  providers: [
+    // Đăng ký JwtAuthGuard làm GLOBAL GUARD — áp dụng cho tất cả routes
+    // Routes có @Public() sẽ được bypass tự động
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class ApiGatewayModule {}

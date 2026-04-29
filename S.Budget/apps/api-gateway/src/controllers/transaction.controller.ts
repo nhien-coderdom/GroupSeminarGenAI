@@ -8,18 +8,18 @@ import {
   Param,
   Query,
   Inject,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { TRANSACTION_SERVICE } from '@app/shared/constants/index';
-import { MESSAGE_PATTERNS } from '@app/shared/constants/index';
+import { TRANSACTION_SERVICE, MESSAGE_PATTERNS } from '@app/shared/constants/index';
 import {
   CreateTransactionDto,
   UpdateTransactionDto,
   QuickAddDto,
 } from '@app/shared/dto/index';
+import { CurrentUser } from '../decorators/current-user.decorator';
+import { Public } from '../decorators/public.decorator';
+import { IJwtPayload } from '@app/shared/interfaces';
 
 @Controller('transactions')
 export class TransactionGatewayController {
@@ -28,119 +28,113 @@ export class TransactionGatewayController {
     private readonly transactionClient: ClientProxy,
   ) {}
 
+  /** Tạo giao dịch mới */
   @Post()
-  async create(@Body() createDto: CreateTransactionDto) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_CREATE, {
-          ...createDto,
-          userId: 'TODO_FROM_JWT', // Will be replaced with JWT guard
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Failed to create transaction',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async create(
+    @Body() dto: CreateTransactionDto,
+    @CurrentUser() user: IJwtPayload,
+  ) {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_CREATE, {
+        userId: user.sub,
+        dto,
+      }),
+    );
   }
 
+  /** Nhập nhanh từ text tự nhiên */
   @Post('quick-add')
-  async quickAdd(@Body() quickAddDto: QuickAddDto) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_QUICK_ADD, {
-          ...quickAddDto,
-          userId: 'TODO_FROM_JWT',
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Quick add failed',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async quickAdd(
+    @Body() dto: QuickAddDto,
+    @CurrentUser() user: IJwtPayload,
+  ) {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_QUICK_ADD, {
+        userId: user.sub,
+        dto,
+      }),
+    );
   }
 
+  /** Lấy danh sách giao dịch (phân trang + lọc) */
   @Get()
   async findAll(
+    @CurrentUser() user: IJwtPayload,
     @Query('page') page = 1,
     @Query('limit') limit = 20,
+    @Query('type') type?: 'expense' | 'income',
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('categoryId') categoryId?: string,
   ) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ALL, {
-          userId: 'TODO_FROM_JWT',
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ALL, {
+        userId: user.sub,
+        query: {
           page: Number(page),
           limit: Number(limit),
+          type,
           startDate,
           endDate,
           categoryId,
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Failed to fetch transactions',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+        },
+      }),
+    );
   }
 
+  /** Lấy chi tiết một giao dịch */
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ONE, {
-          id,
-          userId: 'TODO_FROM_JWT',
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Transaction not found',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: IJwtPayload,
+  ) {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ONE, {
+        userId: user.sub,
+        id,
+      }),
+    );
   }
 
+  /** Cập nhật giao dịch */
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateDto: UpdateTransactionDto,
+    @Body() dto: UpdateTransactionDto,
+    @CurrentUser() user: IJwtPayload,
   ) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_UPDATE, {
-          id,
-          userId: 'TODO_FROM_JWT',
-          ...updateDto,
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Failed to update transaction',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_UPDATE, {
+        userId: user.sub,
+        id,
+        dto,
+      }),
+    );
   }
 
+  /** Xoá giao dịch (soft-delete) */
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    try {
-      return await firstValueFrom(
-        this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_DELETE, {
-          id,
-          userId: 'TODO_FROM_JWT',
-        }),
-      );
-    } catch (error) {
-      throw new HttpException(
-        (error as Error).message || 'Failed to delete transaction',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async delete(
+    @Param('id') id: string,
+    @CurrentUser() user: IJwtPayload,
+  ) {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_DELETE, {
+        userId: user.sub,
+        id,
+      }),
+    );
+  }
+
+  /**
+   * Lấy danh sách danh mục chi tiêu.
+   * @Public() — client cần danh mục để hiển thị dropdown, không cần đăng nhập.
+   */
+  @Public()
+  @Get('categories')
+  async getCategories() {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.CATEGORY_FIND_ALL, {}),
+    );
   }
 }
