@@ -54,6 +54,7 @@ export const MESSAGE_PATTERNS = {
   AI_OCR_PROCESS: { cmd: 'ai_ocr_process' },
   AI_DETECT_AMOUNT: { cmd: 'ai_detect_amount' },
   AI_CLASSIFY: { cmd: 'ai_classify' },
+  AI_PARSE_TEXT: { cmd: 'ai_parse_text' },
 
   // Insight
   INSIGHT_STATS: { cmd: 'insight_stats' },

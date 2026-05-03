@@ -17,6 +17,7 @@ import { AuthGatewayController } from './controllers/auth.controller';
 import { TransactionGatewayController } from './controllers/transaction.controller';
 import { InsightGatewayController } from './controllers/insight.controller';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CloudinaryService } from './services/cloudinary.service';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     InsightGatewayController,
   ],
   providers: [
+    CloudinaryService,
     // Đăng ký JwtAuthGuard làm GLOBAL GUARD — áp dụng cho tất cả routes
     // Routes có @Public() sẽ được bypass tự động
     {
