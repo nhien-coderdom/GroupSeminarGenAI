@@ -94,3 +94,34 @@ Tính năng này sẽ đẩy ảnh lên Cloudinary, sau đó gửi link ảnh sa
 
 👉 **Kết quả mong đợi**: 
 Cloudinary sẽ trả về `imageUrl`, AI sẽ đọc được số tiền trên hóa đơn và trả về kết quả (tương tự JSON ở Bước 2) và đính kèm luôn `imageUrl` để bạn xem lại.
+
+---
+
+## 📊 Bước 4: Test Phase 4 - Thống kê & Phân tích bằng AI (Insight)
+
+Tính năng này sẽ gọi Insight Service để lấy toàn bộ giao dịch, tính toán thống kê và nhờ AI phân tích thói quen, đưa ra lời khuyên.
+
+### 4.1. Lấy thống kê chi tiêu
+- **Method**: `GET`
+- **URL**: `http://localhost:3000/api/v1/insights/stats?month=2026-05`
+- **Headers**:
+  - `Authorization`: `Bearer <paste_access_token_cua_ban_vao_day>`
+- **Body**: `none`
+
+👉 **Kết quả mong đợi**: Trả về tổng chi tiêu trong tháng chia theo từng danh mục.
+
+### 4.2. Lấy phân tích hành vi chi tiêu (AI)
+- **Method**: `GET`
+- **URL**: `http://localhost:3000/api/v1/insights/behavior`
+- **Headers**:
+  - `Authorization`: `Bearer <paste_access_token_cua_ban_vao_day>`
+
+👉 **Kết quả mong đợi**: AI sẽ nhận xét ngắn gọn về thói quen chi tiêu của bạn.
+
+### 4.3. Xin lời khuyên tiết kiệm (AI)
+- **Method**: `GET`
+- **URL**: `http://localhost:3000/api/v1/insights/recommendations`
+- **Headers**:
+  - `Authorization`: `Bearer <paste_access_token_cua_ban_vao_day>`
+
+👉 **Kết quả mong đợi**: AI đưa ra 3 lời khuyên thiết thực dựa trên chi tiêu thực tế của bạn.
