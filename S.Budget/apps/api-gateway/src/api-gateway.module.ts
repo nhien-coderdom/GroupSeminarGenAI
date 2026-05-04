@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   AUTH_SERVICE,
@@ -25,6 +26,12 @@ import { CloudinaryService } from './services/cloudinary.service';
 
     // JwtModule dùng để verify token trong JwtAuthGuard
     JwtModule.register({}),
+
+    // Rate Limiting: 100 requests / 60 seconds
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 100,
+    }]),
 
     ClientsModule.register([
       {
@@ -77,6 +84,10 @@ import { CloudinaryService } from './services/cloudinary.service';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

@@ -149,6 +149,18 @@ export class TransactionGatewayController {
     );
   }
 
+  /**
+   * Lấy danh sách danh mục chi tiêu.
+   * @Public() — client cần danh mục để hiển thị dropdown, không cần đăng nhập.
+   */
+  @Public()
+  @Get('categories')
+  async getCategories() {
+    return firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.CATEGORY_FIND_ALL, {}),
+    );
+  }
+
   /** Lấy chi tiết một giao dịch */
   @Get(':id')
   async findOne(
@@ -193,15 +205,4 @@ export class TransactionGatewayController {
     );
   }
 
-  /**
-   * Lấy danh sách danh mục chi tiêu.
-   * @Public() — client cần danh mục để hiển thị dropdown, không cần đăng nhập.
-   */
-  @Public()
-  @Get('categories')
-  async getCategories() {
-    return firstValueFrom(
-      this.transactionClient.send(MESSAGE_PATTERNS.CATEGORY_FIND_ALL, {}),
-    );
-  }
 }
