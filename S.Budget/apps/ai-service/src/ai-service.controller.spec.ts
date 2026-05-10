@@ -3,20 +3,54 @@ import { AiServiceController } from './ai-service.controller';
 import { AiServiceService } from './ai-service.service';
 
 describe('AiServiceController', () => {
-  let aiServiceController: AiServiceController;
+  let controller: AiServiceController;
+  let service: AiServiceService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const mockService = {
+      parseTextToTransaction: jest.fn(),
+      processImageOcr: jest.fn(),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AiServiceController],
-      providers: [AiServiceService],
+      providers: [
+        {
+          provide: AiServiceService,
+          useValue: mockService,
+        },
+      ],
     }).compile();
 
-    aiServiceController = app.get<AiServiceController>(AiServiceController);
+    controller = module.get<AiServiceController>(AiServiceController);
+    service = module.get<AiServiceService>(AiServiceService);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(aiServiceController.getHello()).toBe('Hello World!');
+  describe('processImageOcr', () => {
+    it('should call processImageOcr on service', async () => {
+      const mockResult = { amount: 100000, category: 'food' };
+      (service.processImageOcr as jest.Mock).mockResolvedValue(mockResult);
+
+      const result = await controller.processImageOcr({
+        imageUrl: 'http://example.com/receipt.jpg',
+      });
+
+      expect(service.processImageOcr).toHaveBeenCalledWith('http://example.com/receipt.jpg');
+      expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('parseText', () => {
+    it('should call parseTextToTransaction on service', async () => {
+      const mockResult = { category: 'transport', confidence: 0.9 };
+      (service.parseTextToTransaction as jest.Mock).mockResolvedValue(mockResult);
+
+      const result = await controller.parseText({
+        text: 'taxi fare',
+      });
+
+      expect(service.parseTextToTransaction).toHaveBeenCalledWith('taxi fare');
+      expect(result).toEqual(mockResult);
     });
   });
 });
