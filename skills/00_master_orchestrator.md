@@ -78,7 +78,7 @@ Paste prompt sau vào AI:
 ```
 Đọc file `skills/00_master_orchestrator.md` và thực hiện workflow cho yêu cầu sau:
 
-{{MÔ TẢ YÊU CẦU CỤ THỂ}}
+{{MÔ TẢ YÊU CẦU CỤ THỂ}} 
 
 Dự án hiện tại đã hoàn thành đến prompt số {{SỐ PROMPT HIỆN TẠI}}.
 Phase hiện tại: {{PHASE HIỆN TẠI}}
