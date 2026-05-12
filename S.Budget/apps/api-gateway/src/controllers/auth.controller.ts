@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Inject,
-} from '@nestjs/common';
+import { Controller, Post, Body, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AUTH_SERVICE, MESSAGE_PATTERNS } from '@app/shared/constants/index';

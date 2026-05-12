@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Inject,
-} from '@nestjs/common';
+import { Controller, Get, Query, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { INSIGHT_SERVICE, MESSAGE_PATTERNS } from '@app/shared/constants/index';

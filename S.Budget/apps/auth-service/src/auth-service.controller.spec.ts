@@ -23,7 +23,9 @@ describe('AuthServiceController', () => {
       ],
     }).compile();
 
-    authServiceController = app.get<AuthServiceController>(AuthServiceController);
+    authServiceController = app.get<AuthServiceController>(
+      AuthServiceController,
+    );
   });
 
   it('should be defined', () => {

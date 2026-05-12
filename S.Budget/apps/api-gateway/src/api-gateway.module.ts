@@ -28,10 +28,12 @@ import { CloudinaryService } from './services/cloudinary.service';
     JwtModule.register({}),
 
     // Rate Limiting: 100 requests / 60 seconds
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
 
     ClientsModule.register([
       {

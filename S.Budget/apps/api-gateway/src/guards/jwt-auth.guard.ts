@@ -26,7 +26,9 @@ export class JwtAuthGuard implements CanActivate {
     if (isPublic) return true;
 
     // Lấy token từ Authorization header
-    const request = context.switchToHttp().getRequest<Request & { user: IJwtPayload }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user: IJwtPayload }>();
     const token = this._extractToken(request);
 
     if (!token) {

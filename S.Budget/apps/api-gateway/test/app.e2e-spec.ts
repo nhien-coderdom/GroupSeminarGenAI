@@ -22,4 +22,3 @@ describe('ApiGatewayController (e2e)', () => {
       .expect('Hello World!');
   });
 });
-

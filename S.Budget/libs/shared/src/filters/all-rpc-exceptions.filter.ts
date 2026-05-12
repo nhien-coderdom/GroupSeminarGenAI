@@ -1,4 +1,10 @@
-import { Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import {
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { BaseRpcExceptionFilter, RpcException } from '@nestjs/microservices';
 import { Observable, throwError } from 'rxjs';
 
@@ -48,10 +54,7 @@ export class AllRpcExceptionsFilter extends BaseRpcExceptionFilter {
 
     // Throw RpcException với JSON payload để Gateway parse được
     return throwError(
-      () =>
-        new RpcException(
-          JSON.stringify({ statusCode, message }),
-        ),
+      () => new RpcException(JSON.stringify({ statusCode, message })),
     );
   }
 }

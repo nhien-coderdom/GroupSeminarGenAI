@@ -29,7 +29,11 @@ describe('InsightServiceController', () => {
 
   describe('getStats', () => {
     it('should call getStats on service', async () => {
-      const mockResult = { month: '2026-05', totalExpense: 50000, breakdown: [] };
+      const mockResult = {
+        month: '2026-05',
+        totalExpense: 50000,
+        breakdown: [],
+      };
       (service.getStats as jest.Mock).mockResolvedValue(mockResult);
 
       const result = await controller.getStats({
@@ -37,7 +41,10 @@ describe('InsightServiceController', () => {
         month: '2026-05',
       });
 
-      expect(service.getStats).toHaveBeenCalledWith({ userId: 'user-1', month: '2026-05' });
+      expect(service.getStats).toHaveBeenCalledWith({
+        userId: 'user-1',
+        month: '2026-05',
+      });
       expect(result).toEqual(mockResult);
     });
   });
@@ -51,7 +58,9 @@ describe('InsightServiceController', () => {
         userId: 'user-1',
       });
 
-      expect(service.getRecommendations).toHaveBeenCalledWith({ userId: 'user-1' });
+      expect(service.getRecommendations).toHaveBeenCalledWith({
+        userId: 'user-1',
+      });
       expect(result).toEqual(mockResult);
     });
   });

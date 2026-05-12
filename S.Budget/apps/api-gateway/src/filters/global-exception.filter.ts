@@ -49,14 +49,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
-      } else if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      } else if (
+        typeof exceptionResponse === 'object' &&
+        exceptionResponse !== null
+      ) {
         const resp = exceptionResponse as Record<string, unknown>;
         message = Array.isArray(resp['message'])
           ? (resp['message'] as string[]).join('; ')
           : (resp['message'] as string) || message;
       }
 
-      error = exception.name.replace('Exception', '') || this._statusToError(statusCode);
+      error =
+        exception.name.replace('Exception', '') ||
+        this._statusToError(statusCode);
     } else if (
       exception !== null &&
       typeof exception === 'object' &&
@@ -64,7 +69,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     ) {
       // ── Plain object từ RabbitMQ RPC (NestJS serialize RpcException thành object) ─
       const rpcObj = exception as Record<string, unknown>;
-      if (typeof rpcObj['statusCode'] === 'number' && typeof rpcObj['message'] === 'string') {
+      if (
+        typeof rpcObj['statusCode'] === 'number' &&
+        typeof rpcObj['message'] === 'string'
+      ) {
         statusCode = rpcObj['statusCode'];
         message = rpcObj['message'];
         error = this._statusToError(statusCode);
@@ -106,7 +114,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         exception instanceof Error ? exception.stack : String(exception),
       );
     } else {
-      this.logger.warn(`[${request.method}] ${request.url} → ${statusCode}: ${message}`);
+      this.logger.warn(
+        `[${request.method}] ${request.url} → ${statusCode}: ${message}`,
+      );
     }
 
     response.status(statusCode).json(errorResponse);

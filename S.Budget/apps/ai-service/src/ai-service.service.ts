@@ -37,13 +37,16 @@ Hãy trích xuất từ câu sau: "${text}"
       });
 
       const resultText = response.choices[0]?.message?.content?.trim();
-      
+
       if (!resultText) {
         throw new Error('Empty response from OpenAI');
       }
 
       // Xóa các ký tự markdown dư thừa nếu có (vd: ```json ... ```)
-      const cleanedText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const cleanedText = resultText
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
       const parsedData = JSON.parse(cleanedText);
 
       return parsedData;
@@ -90,15 +93,21 @@ Cấu trúc JSON bắt buộc phải có:
       });
 
       const resultText = response.choices[0]?.message?.content?.trim();
-      
+
       if (!resultText) {
         throw new Error('Empty response from OpenAI Vision');
       }
 
-      const cleanedText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const cleanedText = resultText
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
       return JSON.parse(cleanedText);
     } catch (error) {
-      this.logger.error(`Failed to process image OCR: ${error.message}`, error.stack);
+      this.logger.error(
+        `Failed to process image OCR: ${error.message}`,
+        error.stack,
+      );
       throw new RpcException({
         statusCode: 500,
         message: 'Could not extract data from image via AI',

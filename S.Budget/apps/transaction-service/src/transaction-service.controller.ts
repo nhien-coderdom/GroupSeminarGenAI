@@ -2,7 +2,11 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TransactionServiceService } from './transaction-service.service';
 import { MESSAGE_PATTERNS } from '@app/shared/constants';
-import { CreateTransactionDto, UpdateTransactionDto, QuickAddDto } from '@app/shared/dto';
+import {
+  CreateTransactionDto,
+  UpdateTransactionDto,
+  QuickAddDto,
+} from '@app/shared/dto';
 
 @Controller()
 export class TransactionServiceController {
@@ -52,7 +56,11 @@ export class TransactionServiceController {
   update(
     @Payload() data: { userId: string; id: string; dto: UpdateTransactionDto },
   ) {
-    return this.transactionServiceService.update(data.userId, data.id, data.dto);
+    return this.transactionServiceService.update(
+      data.userId,
+      data.id,
+      data.dto,
+    );
   }
 
   /** Xoá mềm giao dịch (soft-delete) */
