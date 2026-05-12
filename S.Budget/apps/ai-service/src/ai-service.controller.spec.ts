@@ -35,7 +35,9 @@ describe('AiServiceController', () => {
         imageUrl: 'http://example.com/receipt.jpg',
       });
 
-      expect(service.processImageOcr).toHaveBeenCalledWith('http://example.com/receipt.jpg');
+      expect(service.processImageOcr).toHaveBeenCalledWith(
+        'http://example.com/receipt.jpg',
+      );
       expect(result).toEqual(mockResult);
     });
   });
@@ -43,7 +45,9 @@ describe('AiServiceController', () => {
   describe('parseText', () => {
     it('should call parseTextToTransaction on service', async () => {
       const mockResult = { category: 'transport', confidence: 0.9 };
-      (service.parseTextToTransaction as jest.Mock).mockResolvedValue(mockResult);
+      (service.parseTextToTransaction as jest.Mock).mockResolvedValue(
+        mockResult,
+      );
 
       const result = await controller.parseText({
         text: 'taxi fare',

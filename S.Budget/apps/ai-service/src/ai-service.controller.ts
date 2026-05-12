@@ -18,7 +18,10 @@ export class AiServiceController {
   @MessagePattern(MESSAGE_PATTERNS.AI_OCR_PROCESS)
   async processImageOcr(@Payload() data: { imageUrl: string }) {
     if (!data?.imageUrl) {
-      throw new RpcException({ statusCode: 400, message: 'Image URL is required' });
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Image URL is required',
+      });
     }
     return this.aiServiceService.processImageOcr(data.imageUrl);
   }

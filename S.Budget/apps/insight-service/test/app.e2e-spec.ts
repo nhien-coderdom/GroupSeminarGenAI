@@ -22,4 +22,3 @@ describe('InsightServiceController (e2e)', () => {
       .expect('Hello World!');
   });
 });
-

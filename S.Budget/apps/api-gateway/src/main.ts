@@ -46,6 +46,8 @@ async function bootstrap() {
   const port = process.env['API_GATEWAY_PORT'] || 3000;
   await app.listen(port);
   console.log(`🚀 API Gateway is running on port ${port}`);
-  console.log(`📚 Swagger documentation is available at http://localhost:${port}/api/docs`);
+  console.log(
+    `📚 Swagger documentation is available at http://localhost:${port}/api/docs`,
+  );
 }
 bootstrap();

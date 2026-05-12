@@ -113,8 +113,20 @@ export class TransactionServiceService {
       startDate?: string;
       endDate?: string;
     } = {},
-  ): Promise<{ data: ITransaction[]; total: number; page: number; limit: number }> {
-    const { page = 1, limit = 20, type, categoryId, startDate, endDate } = query;
+  ): Promise<{
+    data: ITransaction[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const {
+      page = 1,
+      limit = 20,
+      type,
+      categoryId,
+      startDate,
+      endDate,
+    } = query;
     const skip = (page - 1) * limit;
 
     const where = {

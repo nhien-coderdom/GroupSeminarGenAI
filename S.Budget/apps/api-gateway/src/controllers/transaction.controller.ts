@@ -15,7 +15,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { TRANSACTION_SERVICE, AI_SERVICE, MESSAGE_PATTERNS } from '@app/shared/constants/index';
+import {
+  TRANSACTION_SERVICE,
+  AI_SERVICE,
+  MESSAGE_PATTERNS,
+} from '@app/shared/constants/index';
 import {
   CreateTransactionDto,
   UpdateTransactionDto,
@@ -52,10 +56,7 @@ export class TransactionGatewayController {
 
   /** Nhập nhanh từ text tự nhiên */
   @Post('quick-add')
-  async quickAdd(
-    @Body('text') text: string,
-    @CurrentUser() user: IJwtPayload,
-  ) {
+  async quickAdd(@Body('text') text: string, @CurrentUser() user: IJwtPayload) {
     if (!text) {
       throw new BadRequestException('Text is required');
     }
@@ -163,10 +164,7 @@ export class TransactionGatewayController {
 
   /** Lấy chi tiết một giao dịch */
   @Get(':id')
-  async findOne(
-    @Param('id') id: string,
-    @CurrentUser() user: IJwtPayload,
-  ) {
+  async findOne(@Param('id') id: string, @CurrentUser() user: IJwtPayload) {
     return firstValueFrom(
       this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ONE, {
         userId: user.sub,
@@ -193,10 +191,7 @@ export class TransactionGatewayController {
 
   /** Xoá giao dịch (soft-delete) */
   @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-    @CurrentUser() user: IJwtPayload,
-  ) {
+  async delete(@Param('id') id: string, @CurrentUser() user: IJwtPayload) {
     return firstValueFrom(
       this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_DELETE, {
         userId: user.sub,
@@ -204,5 +199,4 @@ export class TransactionGatewayController {
       }),
     );
   }
-
 }

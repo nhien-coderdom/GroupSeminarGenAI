@@ -26,13 +26,21 @@ describe('TransactionServiceController', () => {
       ],
     }).compile();
 
-    controller = module.get<TransactionServiceController>(TransactionServiceController);
+    controller = module.get<TransactionServiceController>(
+      TransactionServiceController,
+    );
     service = module.get<TransactionServiceService>(TransactionServiceService);
   });
 
   describe('quickAdd', () => {
     it('should call quickAdd on service with correct params', async () => {
-      const mockResult = { id: '1', amount: 80000, note: '80k cafe', categoryId: 'cat1', type: 'expense' };
+      const mockResult = {
+        id: '1',
+        amount: 80000,
+        note: '80k cafe',
+        categoryId: 'cat1',
+        type: 'expense',
+      };
       (service.quickAdd as jest.Mock).mockResolvedValue(mockResult);
 
       const result = await controller.quickAdd({
@@ -40,7 +48,9 @@ describe('TransactionServiceController', () => {
         dto: { text: '80k cafe' },
       });
 
-      expect(service.quickAdd).toHaveBeenCalledWith('user-1', { text: '80k cafe' });
+      expect(service.quickAdd).toHaveBeenCalledWith('user-1', {
+        text: '80k cafe',
+      });
       expect(result).toEqual(mockResult);
     });
   });
@@ -50,7 +60,12 @@ describe('TransactionServiceController', () => {
       const mockResult = { id: '2', amount: 50000, note: 'Lunch' };
       (service.create as jest.Mock).mockResolvedValue(mockResult);
 
-      const dto = { amount: 50000, note: 'Lunch', type: 'expense', date: new Date().toISOString() } as any;
+      const dto = {
+        amount: 50000,
+        note: 'Lunch',
+        type: 'expense',
+        date: new Date().toISOString(),
+      } as any;
       const result = await controller.create({
         userId: 'user-1',
         dto,
