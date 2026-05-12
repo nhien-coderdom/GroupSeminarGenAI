@@ -13,6 +13,9 @@ jobs:
   lint-and-test:
     name: Lint & Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./S.Budget
 
     services:
       postgres:
@@ -49,9 +52,29 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: './S.Budget/package-lock.json'
+
+      - name: Initialize PostgreSQL Databases
+        run: |
+          PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE auth_db;"
+          PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE transaction_db;"
+          PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE insight_db;"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Setup Prisma
+        run: |
+          npx prisma generate --schema=apps/auth-service/prisma/schema.prisma
+          npx prisma db push --schema=apps/auth-service/prisma/schema.prisma --accept-data-loss
+          npx prisma generate --schema=apps/transaction-service/prisma/schema.prisma
+          npx prisma db push --schema=apps/transaction-service/prisma/schema.prisma --accept-data-loss
+          npx prisma generate --schema=apps/insight-service/prisma/schema.prisma
+          npx prisma db push --schema=apps/insight-service/prisma/schema.prisma --accept-data-loss
+        env:
+          AUTH_DATABASE_URL: postgresql://sbudget:sbudget_pass@localhost:5432/auth_db
+          TRANSACTION_DATABASE_URL: postgresql://sbudget:sbudget_pass@localhost:5432/transaction_db
+          INSIGHT_DATABASE_URL: postgresql://sbudget:sbudget_pass@localhost:5432/insight_db
 
       - name: Lint
         run: npm run lint
@@ -70,6 +93,9 @@ jobs:
     needs: lint-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: ./S.Budget
 
     strategy:
       matrix:
@@ -88,6 +114,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: './S.Budget/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -104,8 +131,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: apps/${{ matrix.service }}/Dockerfile
+          context: ./S.Budget
+          file: ./S.Budget/apps/${{ matrix.service }}/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/sbudget-${{ matrix.service }}:latest
