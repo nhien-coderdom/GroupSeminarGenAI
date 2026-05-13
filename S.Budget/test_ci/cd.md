@@ -1,1 +1,1 @@
-con khùng thần kinh
+con khùng thần kinh quá nha mạy
