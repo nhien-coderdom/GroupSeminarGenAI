@@ -1,30 +1,60 @@
+# =========================================================
+# S.Budget CI/CD Pipeline
+# =========================================================
+# This workflow handles:
+# 1. Continuous Integration (CI)
+#    - Lint source code
+#    - Run automated tests
+#    - Setup PostgreSQL & RabbitMQ
+#    - Generate Prisma Clients
+#
+# 2. Continuous Delivery (CD)
+#    - Build Docker images
+#    - Push images to Docker Hub
+#
+# CI runs on all branches.
+# CD runs only on main/develop.
+# =========================================================
+
 name: S.Budget CI/CD
 
 on:
+  # Run CI on all branches
   push:
     branches:
       - '**'
+
+  # Run PR validation
   pull_request:
     branches:
       - main
       - develop
 
+# Shared environment variables
 env:
   NODE_VERSION: '20'
 
+# GitHub Actions permissions
 permissions:
   contents: read
   packages: write
 
 jobs:
+
+  # =======================================================
+  # CI JOB
+  # =======================================================
   lint-and-test:
     name: Lint & Test
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: ./S.Budget
 
     services:
+
+      # PostgreSQL service
       postgres:
         image: postgres:16-alpine
         env:
@@ -38,6 +68,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      # RabbitMQ service
       rabbitmq:
         image: rabbitmq:3-management-alpine
         env:
@@ -52,9 +83,12 @@ jobs:
           --health-retries 5
 
     steps:
+
+      # Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -62,21 +96,26 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './S.Budget/package-lock.json'
 
+      # Create databases
       - name: Initialize PostgreSQL Databases
         run: |
           PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE auth_db;"
           PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE transaction_db;"
           PGPASSWORD=sbudget_pass psql -h localhost -U sbudget -d postgres -c "CREATE DATABASE insight_db;"
 
+      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # Generate Prisma Clients
       - name: Setup Prisma
         run: |
           npx prisma generate --schema=apps/auth-service/prisma/schema.prisma
           npx prisma db push --schema=apps/auth-service/prisma/schema.prisma --accept-data-loss
+
           npx prisma generate --schema=apps/transaction-service/prisma/schema.prisma
           npx prisma db push --schema=apps/transaction-service/prisma/schema.prisma --accept-data-loss
+
           npx prisma generate --schema=apps/insight-service/prisma/schema.prisma
           npx prisma db push --schema=apps/insight-service/prisma/schema.prisma --accept-data-loss
         env:
@@ -84,9 +123,11 @@ jobs:
           TRANSACTION_DATABASE_URL: postgresql://sbudget:sbudget_pass@localhost:5432/transaction_db
           INSIGHT_DATABASE_URL: postgresql://sbudget:sbudget_pass@localhost:5432/insight_db
 
+      # Run ESLint
       - name: Lint
         run: npm run lint
 
+      # Run tests
       - name: Run tests
         run: npm run test
         env:
@@ -96,17 +137,28 @@ jobs:
           RABBITMQ_URL: amqp://sbudget:sbudget_pass@localhost:5672
           JWT_SECRET: test-secret
 
+  # =======================================================
+  # CD JOB
+  # =======================================================
   build:
     name: Build & Push Docker Images
+
+    # Run only after CI success
     needs: lint-and-test
+
     runs-on: ubuntu-latest
+
+    # Prevent Docker push on PRs
     if: github.event_name != 'pull_request' && contains(fromJson('["refs/heads/main","refs/heads/develop"]'), github.ref)
+
     defaults:
       run:
         working-directory: ./S.Budget
 
     strategy:
+      # Continue building even if one service fails
       fail-fast: false
+
       matrix:
         service:
           - api-gateway
@@ -116,9 +168,12 @@ jobs:
           - insight-service
 
     steps:
+
+      # Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -126,21 +181,33 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './S.Budget/package-lock.json'
 
+      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # Generate Prisma Clients before build
+      - name: Generate Prisma Clients
+        run: |
+          npx prisma generate --schema=apps/auth-service/prisma/schema.prisma
+          npx prisma generate --schema=apps/transaction-service/prisma/schema.prisma
+          npx prisma generate --schema=apps/insight-service/prisma/schema.prisma
+
+      # Build NestJS service
       - name: Build ${{ matrix.service }}
         run: npx nest build ${{ matrix.service }}
 
+      # Setup Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Login Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      # Build and push Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
