@@ -61,14 +61,21 @@ Sinh nội dung cho các chương:
 - Chương 4: Hiện thực (screenshots, code snippets, test results)
 - Chương 5: Kết luận & hướng phát triển
 
-### Quy trình
-1. Xác định loại tài liệu cần sinh
-2. Quét source code liên quan
-3. Sinh nội dung theo format tương ứng
-4. Lưu vào `results/docs/` hoặc vị trí phù hợp
+### 🔄 Quy trình Cải tiến: Cập nhật Lũy tiến (Incremental Update)
 
-### Kích hoạt
-```
-Đọc file skills/09_documentation_generator.md và sinh tài liệu loại {{LOẠI}} cho {{SCOPE}}.
-Loại: API / DATABASE / ARCHITECTURE / REPORT_CHAPTER_{{N}}
-```
+Thay vì viết lại toàn bộ tài liệu, hãy thực hiện theo kỹ thuật **"Scan - Compare - Patch"**:
+
+1. **Scan:** Đọc file tài liệu hiện có (ví dụ `README.md` hoặc `API_Docs.md`).
+2. **Compare:** So sánh với Code mới và `result_{N+1}.md` để tìm sự khác biệt.
+3. **Patch:** Chỉ ghi đè hoặc chèn thêm nội dung vào các phần bị thay đổi.
+
+### 🔗 Liên kết Dữ liệu (Data Linkage)
+
+AI phải sử dụng bằng chứng từ các skill khác để viết tài liệu:
+- **Từ Skill 07 (Test Report):** Lấy screenshot hoặc log kết quả test để đưa vào phần "Verification".
+- **Từ Skill 10 (Deployment):** Lấy URL health-check hoặc trạng thái container để làm bằng chứng "Production-ready".
+
+### 📋 Checklist kỉ thuật cho Tài liệu:
+- [ ] Có sơ đồ Sequence cho các luồng mới (sử dụng Mermaid).
+- [ ] API Table cập nhật đúng Path, Method và Request Body.
+- [ ] ERD Diagram cập nhật nếu có thay đổi Model Prisma.

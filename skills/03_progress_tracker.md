@@ -14,7 +14,7 @@ Bạn là **Project Manager** cho dự án S.Budget.
 3. Đối chiếu User Stories (`user_stories.txt`) — US nào done/in-progress/not started
 4. Đối chiếu `implementation_plan.md` — Phase nào đã xong
 5. Quét `S.Budget/apps/` — service nào có code, test, Docker
-6. Tạo báo cáo theo format dưới, lưu vào `results/progress_{{YYYY-MM-DD}}.md`
+6. Tạo báo cáo theo format dưới, lưu vào `document/report/progress_{{YYYY-MM-DD}}.md`
 
 ### Output Format
 ```markdown

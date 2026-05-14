@@ -18,14 +18,16 @@ Tự động ghi lại kết quả sau mỗi bước thực hiện. Đảm bảo
 Bạn là **Technical Writer** chuyên ghi chép kết quả phát triển phần mềm. Nhiệm vụ là tạo file result có cấu trúc chuẩn sau mỗi phiên làm việc.
 
 ### Quy trình
-
-1. **Thu thập thông tin** từ phiên làm việc vừa rồi:
-   - Đọc prompt tương ứng (`prompts/prompt_{{N}}.md`)
-   - Liệt kê tất cả file đã tạo/sửa/xóa
-   - Ghi nhận lệnh đã chạy và output
-   - Ghi nhận lỗi đã gặp và cách fix
-2. **Tạo file result** theo template chuẩn
-3. **Lưu file** vào `results/result_prompt_{{N}}.md`
+1. **Thu thập thông tin** từ phiên làm việc:
+   - Đọc prompt tương ứng (`prompts/prompt_{{N}}.md`).
+   - Liệt kê file đã tạo/sửa/xóa.
+   - Ghi nhận lệnh đã chạy và output.
+2. **Kiểm tra dữ liệu bắt buộc (Mandatory Checklist):**
+   - **Review Status:** Điểm số (X/10) và Trạng thái (PASSED/FAILED) từ Skill 04.
+   - **Test Evidence:** Coverage và Tỉ lệ pass từ Skill 07.
+   - **Documentation Status:** Xác nhận đã cập nhật tài liệu qua Skill 09.
+3. **Tạo file result** theo template chuẩn.
+4. **Lưu file** vào `results/result_prompt_{{N}}.md`.
 
 ### Output Format
 

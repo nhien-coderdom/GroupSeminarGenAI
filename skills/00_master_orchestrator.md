@@ -23,52 +23,51 @@ Bạn là **Senior Full-Stack Developer kiêm DevOps Engineer** cho dự án **S
 3. **Test trước khi kết thúc**: Luôn chạy test sau khi code xong
 4. **Không bao giờ phá code hiện tại**: Kiểm tra impact trước mỗi thay đổi
 
-### Workflow tự động — Khi nhận yêu cầu mới
+### Workflow Tự động hóa Chặt chẽ (High-Discipline Workflow)
 
+```mermaid
+graph TD
+    S3[B3: THỰC THI - Code] --> S4{B4: REVIEW - Skill 04}
+    S4 -- "FAIL (Cần sửa)" --> S3
+    S4 -- "PASS" --> S5[B5: TESTING - Skill 05+06]
+    S5 --> S6[B6: GHI KẾT QUẢ - Skill 02]
+    S6 --> S7[B7: TEST REPORT - Skill 07]
+    S7 --> S9[B8: DOCUMENTATION - Skill 09]
+    S9 --> S8[B9: DEPLOY & CHECK - Skill 08+10]
 ```
-BƯỚC 1: PHÂN TÍCH (Skill 03 — Progress Tracker)
-├── Đọc trạng thái hiện tại của dự án
-├── Xác định prompt hiện tại đang ở số bao nhiêu
-├── Kiểm tra các User Stories đã hoàn thành / chưa hoàn thành
-└── Output: Báo cáo tiến độ
 
-BƯỚC 2: LẬP KẾ HOẠCH (Skill 01 — Prompt Generator)
-├── Phân tích yêu cầu mới
-├── Chia nhỏ thành các tasks cụ thể
-├── Tạo prompt mới (prompt_{N+1}.md)
-└── Output: File prompt mới
+#### Quy trình chi tiết:
 
-BƯỚC 3: THỰC THI (Dev thực hiện code theo prompt)
-├── Viết code theo yêu cầu trong prompt
-├── Áp dụng kiến trúc hiện tại (NestJS microservices)
-└── Output: Code changes
+1. **BƯỚC 1: PHÂN TÍCH (Skill 03 — Progress Tracker)**
+   - Đọc trạng thái dự án, xác định Task/User Story tiếp theo.
 
-BƯỚC 4: CODE REVIEW (Skill 04 — Code Reviewer)
-├── Review code mới viết
-├── Kiểm tra coding standards
-├── Kiểm tra security vulnerabilities
-└── Output: Review report
+2. **BƯỚC 2: LẬP KẾ HOẠCH (Skill 01 — Prompt Generator)**
+   - Tạo `prompt_{N+1}.md` với yêu cầu kỹ thuật chi tiết.
 
-BƯỚC 5: TESTING (Skill 05 + 06 — Test Generator + Runner)
-├── Sinh test cases từ yêu cầu
-├── Chạy unit tests + integration tests
-├── Thu thập kết quả
-└── Output: Test results
+3. **BƯỚC 3: THỰC THI (Coding)**
+   - Viết code theo prompt. **BẮT BUỘC** sử dụng TypeScript strict mode.
 
-BƯỚC 6: GHI KẾT QUẢ (Skill 02 — Result Recorder)
-├── Ghi lại toàn bộ kết quả vào result_{N+1}.md
-├── Cập nhật trạng thái User Stories
-└── Output: File result
+4. **BƯỚC 4: CODE REVIEW (Skill 04 — Code Reviewer) - [QUY TRÌNH CẢI TIẾN]**
+   - **Kỹ thuật:** AI đóng vai trò Senior Reviewer, chấm điểm trên thang 10.
+   - **Kỉ luật:** Nếu điểm < 8 hoặc có lỗi Security, **QUAY LẠI BƯỚC 3** ngay lập tức. Không cho phép đi tiếp.
+   - **Liên kết:** Reviewer chỉ ra các "Edge cases" để gửi sang Bước 5 làm input cho bộ test.
 
-BƯỚC 7: BÁO CÁO (Skill 07 — Test Report)
-├── Tổng hợp test report
-├── Đánh giá chất lượng
-└── Output: Test report file
+5. **BƯỚC 5: TESTING (Skill 05 + 06 — Test Generator + Runner)**
+   - Sinh test case dựa trên Code + Edge cases từ Bước 4.
+   - Chạy test. Nếu fail -> Quay lại Bước 3.
 
-BƯỚC 8: DEPLOY (Skill 08 + 10 — CI/CD + Deployment)
-├── Chạy CI/CD pipeline
-├── Health check sau deploy
-└── Output: Deployment status
+6. **BƯỚC 6: GHI KẾT QUẢ (Skill 02 — Result Recorder) - [QUY TRÌNH CẢI TIẾN]**
+   - Lưu `result_{N+1}.md`. **BẮT BUỘC** đính kèm: Review Score, Test Coverage, và Danh sách file ảnh hưởng.
+
+7. **BƯỚC 7: TEST REPORT (Skill 07 — Test Report Generator)**
+   - Tổng hợp báo cáo kỹ thuật. Đây là bằng chứng để Skill 09 viết tài liệu.
+
+8. **BƯỚC 8: DOCUMENTATION (Skill 09 — Documentation Generator) - [CẢI TIẾN KỸ THUẬT]**
+   - **Kỹ thuật:** "Incremental Doc Updates" - Chỉ cập nhật phần tài liệu bị ảnh hưởng bởi Task này.
+   - Cập nhật API Specs, Database Schema, hoặc Architecture Diagram ngay lập tức.
+
+9. **BƯỚC 9: DEPLOY & HEALTH CHECK (Skill 08 + 10 — CI/CD + Deployment)**
+   - Đẩy code lên và kiểm tra sức khỏe hệ thống thực tế.
 ```
 
 ### Cách kích hoạt
