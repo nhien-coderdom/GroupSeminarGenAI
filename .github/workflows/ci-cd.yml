@@ -12,8 +12,12 @@
 #    - Build Docker images
 #    - Push images to Docker Hub
 #
+# 3. Deploy to Railway
+#    - Redeploy each microservice on Railway
+#    - Requires secrets: RAILWAY_TOKEN + per-service RAILWAY_SERVICE_ID_*
+#
 # CI runs on all branches.
-# CD runs only on main/develop.
+# CD + Deploy runs only on main.
 # =========================================================
 # hello các con vợ của anh 
 name: S.Budget CI/CD
@@ -217,3 +221,59 @@ jobs:
           tags: |
             docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/sbudget-${{ matrix.service }}:latest
             docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/sbudget-${{ matrix.service }}:${{ github.sha }}
+
+  # =======================================================
+  # DEPLOY JOB — Railway
+  # =======================================================
+  deploy:
+    name: Deploy to Railway
+
+    # Run only after all Docker images are built & pushed
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    # Deploy only on main branch (not PRs, not develop)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    strategy:
+      # Deploy services independently — don't stop all if one fails
+      fail-fast: false
+
+      matrix:
+        include:
+          - service: api-gateway
+            service_id_secret: RAILWAY_SERVICE_ID_API_GATEWAY
+          - service: auth-service
+            service_id_secret: RAILWAY_SERVICE_ID_AUTH
+          - service: transaction-service
+            service_id_secret: RAILWAY_SERVICE_ID_TRANSACTION
+          - service: ai-service
+            service_id_secret: RAILWAY_SERVICE_ID_AI
+          - service: insight-service
+            service_id_secret: RAILWAY_SERVICE_ID_INSIGHT
+
+    steps:
+
+      # Install Railway CLI
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      # Trigger redeploy for this service on Railway
+      # Railway will pull the latest Docker image from Docker Hub
+      - name: Deploy ${{ matrix.service }} to Railway
+        run: |
+          railway redeploy \
+            --service ${{ secrets[matrix.service_id_secret] }} \
+            --yes
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      # Confirm deployment status
+      - name: Verify ${{ matrix.service }} deployment
+        run: |
+          echo "✅ ${{ matrix.service }} deployment triggered successfully"
+          echo "   Service ID: ${{ secrets[matrix.service_id_secret] }}"
+          echo "   Image: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/sbudget-${{ matrix.service }}:${{ github.sha }}"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
