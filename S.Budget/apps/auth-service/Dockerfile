@@ -12,5 +12,8 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY apps/auth-service/prisma ./prisma
+COPY apps/auth-service/entrypoint.sh ./entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 EXPOSE 3001
-CMD ["node", "dist/apps/auth-service/main.js"]
+CMD ["/app/entrypoint.sh"]
