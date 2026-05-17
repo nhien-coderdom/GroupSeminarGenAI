@@ -17,7 +17,8 @@ where some of the code is missing.
 TASK: Implement the decorators with the missing implementation in the code 
 with the same style of the project files.
 
-FIZZBUZZ_PRINTER: {{{
+FIZZBUZZ_PRINTER:
+```python
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,8 +38,7 @@ def print_fizzbuzz(limit: int) -> None:
             print("Buzz")
         else:
             print(i)
-}}}
-
+```
 CODE: 
 ```
 
