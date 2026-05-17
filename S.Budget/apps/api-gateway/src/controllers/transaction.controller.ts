@@ -124,6 +124,50 @@ export class TransactionGatewayController {
     );
   }
 
+  /** Lấy danh sách giao dịch theo ngày cụ thể và tính tổng */
+  @Get('by-date')
+  async getByDate(
+    @CurrentUser() user: IJwtPayload,
+    @Query('date') dateStr: string,
+  ) {
+    if (!dateStr) throw new BadRequestException('date is required');
+    
+    // Parse the date and create start/end boundaries for that specific day
+    const startDate = new Date(dateStr);
+    startDate.setUTCHours(0, 0, 0, 0);
+    
+    const endDate = new Date(dateStr);
+    endDate.setUTCHours(23, 59, 59, 999);
+
+    const result = await firstValueFrom(
+      this.transactionClient.send(MESSAGE_PATTERNS.TRANSACTION_FIND_ALL, {
+        userId: user.sub,
+        query: {
+          page: 1,
+          limit: 1000, // Fetch all for the day
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      }),
+    );
+
+    const transactions = result.data || [];
+    
+    let totalIncome = 0;
+    let totalExpense = 0;
+    
+    transactions.forEach((tx: any) => {
+      if (tx.type === 'income') totalIncome += tx.amount;
+      if (tx.type === 'expense') totalExpense += tx.amount;
+    });
+
+    return {
+      transactions,
+      totalIncome,
+      totalExpense,
+    };
+  }
+
   /** Lấy danh sách giao dịch (phân trang + lọc) */
   @Get()
   async findAll(

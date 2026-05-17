@@ -51,11 +51,13 @@ export class AuthServiceService {
   async login(
     dto: LoginDto,
   ): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+    console.log(`[AUTH] Processing login for user: ${dto.email}`);
     // 1. Tìm user theo email
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
     if (!user) {
+      console.error(`[AUTH] Login failed: User not found (${dto.email})`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
