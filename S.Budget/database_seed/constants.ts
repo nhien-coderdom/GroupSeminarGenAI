@@ -17,8 +17,7 @@ export const SEED_USERS = [
 ];
 
 export const SEED_CATEGORIES = [
-  { id: '11111111-1111-1111-1111-111111111111', name: 'Food & Dining', icon: 'fast-food', color: '#FF5733' },
-  { id: '22222222-2222-2222-2222-222222222222', name: 'Transport', icon: 'car', color: '#3357FF' },
-  { id: '33333333-3333-3333-3333-333333333333', name: 'Entertainment', icon: 'film', color: '#FF33F5' },
-  { id: '44444444-4444-4444-4444-444444444444', name: 'Salary', icon: 'cash', color: '#33FF57' },
+  // Pure Vietnamese Categories Only
+  // No English fallbacks or duplicates
 ];
+

@@ -19,10 +19,19 @@ export default function TransactionDetailScreen() {
   } = useTransactionStore();
 
   useEffect(() => {
+    console.log('[DETAIL] TransactionDetailScreen (Date view) mounted with date:', date);
     if (date) {
+      console.log('[STORE] Fetching transactions for selected date:', date);
       fetchTransactionsByDate(date);
     }
   }, [date]);
+
+  // Log when transactions are loaded
+  React.useEffect(() => {
+    if (!isLoading && selectedTransactions.length > 0) {
+      console.log(`[STORE] Loaded ${selectedTransactions.length} transactions for date: ${date}`);
+    }
+  }, [selectedTransactions, isLoading]);
 
   const netBalance = totalIncome - totalExpense;
   
@@ -32,20 +41,29 @@ export default function TransactionDetailScreen() {
   };
 
   const renderItem = ({ item }: { item: any }) => (
-    <View className="flex-row items-center justify-between bg-white p-4 rounded-2xl mb-3 shadow-sm border border-gray-100">
-      <View className="flex-row items-center flex-1">
-        <View className="w-12 h-12 rounded-full bg-gray-100 items-center justify-center mr-3">
-          <Text className="text-xl">{item.category?.icon || '🛒'}</Text>
+    <TouchableOpacity
+      onPress={() => {
+        console.log(`[NAVIGATION] Transaction item clicked from date view: ${item.id}`);
+        console.log('[NAVIGATION] Navigating to TransactionDetailView');
+        navigation.navigate('TransactionDetailView', { transactionId: item.id });
+      }}
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-center justify-between bg-white p-4 rounded-2xl mb-3 shadow-sm border border-gray-100">
+        <View className="flex-row items-center flex-1">
+          <View className="w-12 h-12 rounded-full bg-gray-100 items-center justify-center mr-3">
+            <Text className="text-xl">{item.category?.icon || '🛒'}</Text>
+          </View>
+          <View className="flex-1">
+            <Text className="text-text font-bold text-base">{item.category?.name || 'Giao dịch'}</Text>
+            <Text className="text-gray-400 text-xs">{item.note || 'Không có ghi chú'}</Text>
+          </View>
         </View>
-        <View className="flex-1">
-          <Text className="text-text font-bold text-base">{item.note || item.category?.name || 'Giao dịch'}</Text>
-          <Text className="text-gray-400 text-xs">{item.category?.name || 'Khác'} • {new Date(item.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
-        </View>
+        <Text className={`font-bold text-lg ${item.type === 'income' ? 'text-green-500' : 'text-text'}`}>
+          {item.type === 'income' ? '+' : '-'}{item.amount.toLocaleString('vi-VN')} đ
+        </Text>
       </View>
-      <Text className={`font-bold text-lg ${item.type === 'income' ? 'text-green-500' : 'text-text'}`}>
-        {item.type === 'income' ? '+' : '-'}{item.amount.toLocaleString('vi-VN')} đ
-      </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

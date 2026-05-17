@@ -131,11 +131,11 @@ export class TransactionGatewayController {
     @Query('date') dateStr: string,
   ) {
     if (!dateStr) throw new BadRequestException('date is required');
-    
+
     // Parse the date and create start/end boundaries for that specific day
     const startDate = new Date(dateStr);
     startDate.setUTCHours(0, 0, 0, 0);
-    
+
     const endDate = new Date(dateStr);
     endDate.setUTCHours(23, 59, 59, 999);
 
@@ -152,10 +152,10 @@ export class TransactionGatewayController {
     );
 
     const transactions = result.data || [];
-    
+
     let totalIncome = 0;
     let totalExpense = 0;
-    
+
     transactions.forEach((tx: any) => {
       if (tx.type === 'income') totalIncome += tx.amount;
       if (tx.type === 'expense') totalExpense += tx.amount;

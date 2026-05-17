@@ -3,10 +3,33 @@ import AuthNavigator from './AuthNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import SplashScreen from '../screens/SplashScreen';
 import TransactionDetailScreen from '../screens/TransactionDetailScreen';
+import TransactionDetailViewScreen from '../screens/TransactionDetailViewScreen';
+import OCRScanScreen from '../screens/OCRScanScreen';
+import OCRResultScreen from '../screens/OCRResultScreen';
+import ManualTransactionScreen from '../screens/ManualTransactionScreen';
 import { useAuthStore } from '../store/authStore';
 import { useEffect } from 'react';
 
 const Stack = createNativeStackNavigator();
+
+export type RootStackParamList = {
+  Auth: undefined;
+  Main: undefined;
+  TransactionDetail: {
+    date: string;
+  };
+  TransactionDetailView: {
+    transactionId: string;
+  };
+  OCRScan: undefined;
+  OCRResult: {
+    transactionId?: string;
+  };
+  ManualTransaction: {
+    transactionId?: string;
+  };
+  [key: string]: any;
+};
 
 export default function RootNavigator() {
   const { isLoading, token, restoreToken } = useAuthStore();
@@ -27,6 +50,19 @@ export default function RootNavigator() {
         <>
           <Stack.Screen name="Main" component={MainTabNavigator} />
           <Stack.Screen name="TransactionDetail" component={TransactionDetailScreen} />
+          <Stack.Screen name="TransactionDetailView" component={TransactionDetailViewScreen as any} />
+          <Stack.Screen 
+            name="OCRScan" 
+            component={OCRScanScreen}
+          />
+          <Stack.Screen 
+            name="OCRResult" 
+            component={OCRResultScreen}
+          />
+          <Stack.Screen 
+            name="ManualTransaction" 
+            component={ManualTransactionScreen}
+          />
         </>
       )}
     </Stack.Navigator>

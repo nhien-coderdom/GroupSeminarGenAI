@@ -1,30 +1,35 @@
-import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Calendar from '../components/Calendar';
+import TransactionActionSheet from '../components/TransactionActionSheet';
 import { useAuthStore } from '../store/authStore';
 import { useTransactionStore } from '../store/transactionStore';
 
 export default function DashboardScreen() {
   const navigation = useNavigation<any>();
   const { user } = useAuthStore();
+  const [showActionSheet, setShowActionSheet] = useState(false);
   const { 
     selectedDate, 
     setSelectedDate, 
     monthlyIncome, 
     monthlyExpense,
-    fetchMonthlySummary 
+    fetchMonthlySummary,
+    fetchMonthlyTransactions 
   } = useTransactionStore();
 
   useEffect(() => {
     console.log("[DASHBOARD] Dashboard mounted");
-    // Fetch initial monthly summary for the current month
+    // Fetch initial monthly summary and transactions for the current month
     const yearMonth = selectedDate.substring(0, 7);
     fetchMonthlySummary(yearMonth);
+    fetchMonthlyTransactions(yearMonth);
   }, []);
 
   const handleDateSelect = (date: string) => {
+    console.log(`[CALENDAR] User selected: ${date}`);
     setSelectedDate(date);
     const newYearMonth = date.substring(0, 7);
     const currentYearMonth = selectedDate.substring(0, 7);
@@ -35,6 +40,18 @@ export default function DashboardScreen() {
     
     console.log(`[NAVIGATION] Navigate to TransactionDetailScreen for date: ${date}`);
     navigation.navigate('TransactionDetail', { date });
+  };
+
+  const handleManualTransaction = () => {
+    console.log('[DASHBOARD] Action: Nhập thủ công');
+    console.log(`[DATE_SYNC] Passing selectedDate to ManualTransactionScreen: ${selectedDate}`);
+    navigation.navigate('ManualTransaction', { selectedDate });
+  };
+
+  const handleScanReceipt = () => {
+    console.log('[DASHBOARD] Action: Quét hóa đơn');
+    console.log(`[DATE_SYNC] Passing selectedDate to OCRScan: ${selectedDate}`);
+    navigation.navigate('OCRScan', { selectedDate });
   };
 
   const balance = monthlyIncome - monthlyExpense;
@@ -101,12 +118,26 @@ export default function DashboardScreen() {
         <View className="h-24" />
       </ScrollView>
 
-      {/* FAB */}
-      <TouchableOpacity 
+      {/* Action Sheet */}
+      <TransactionActionSheet
+        visible={showActionSheet}
+        onManualTransactionPress={handleManualTransaction}
+        onScanReceiptPress={handleScanReceipt}
+        onClose={() => {
+          console.log('[DASHBOARD] Action sheet closed');
+          setShowActionSheet(false);
+        }}
+      />
+
+      {/* FAB Button */}
+      <TouchableOpacity
+        onPress={() => {
+          console.log('[DASHBOARD] FAB tapped - opening action sheet');
+          setShowActionSheet(true);
+        }}
         className="absolute bottom-6 right-6 w-16 h-16 bg-primary rounded-full items-center justify-center shadow-lg"
-        onPress={() => console.log('Add FAB pressed')}
       >
-        <Text className="text-white text-3xl mb-1">+</Text>
+        <Text className="text-white text-4xl font-bold">+</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

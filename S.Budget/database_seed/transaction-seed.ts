@@ -18,19 +18,25 @@ export async function seedTransaction() {
     });
   }
 
-  // Generate some realistic transactions for John Doe
+  // Generate realistic transactions for John Doe
   const johnId = SEED_USERS[0].id;
+  
+  // Mix of manual and OCR transactions for better testing
   const transactions = [
-    { id: 't1', amount: 4550n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Groceries' },
-    { id: 't2', amount: 300000n, type: 'income', categoryId: SEED_CATEGORIES[3].id, note: 'Salary' },
-    { id: 't3', amount: 1599n, type: 'expense', categoryId: SEED_CATEGORIES[2].id, note: 'Netflix' },
-    { id: 't4', amount: 450n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Coffee' },
+    // Manual transactions
+    { id: 't1', amount: 4550n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Groceries', source: 'manual', imageUrl: null },
+    { id: 't2', amount: 300000n, type: 'income', categoryId: SEED_CATEGORIES[3].id, note: 'Salary', source: 'manual', imageUrl: null },
+    { id: 't3', amount: 1599n, type: 'expense', categoryId: SEED_CATEGORIES[2].id, note: 'Netflix', source: 'manual', imageUrl: null },
+    { id: 't4', amount: 450n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Coffee', source: 'manual', imageUrl: null },
+    
+    // OCR transactions (with placeholder images for testing)
+    { id: 't5', amount: 2500n, type: 'expense', categoryId: SEED_CATEGORIES[1].id, note: 'Gas', source: 'ocr', imageUrl: 'https://via.placeholder.com/150?text=Gas+Receipt' },
+    { id: 't6', amount: 1200n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Restaurant', source: 'ocr', imageUrl: 'https://via.placeholder.com/150?text=Food+Receipt' },
+    { id: 't7', amount: 3800n, type: 'expense', categoryId: SEED_CATEGORIES[0].id, note: 'Shopping', source: 'ocr', imageUrl: 'https://via.placeholder.com/150?text=Receipt' },
   ];
 
   for (const tx of transactions) {
-    // We use a deterministic approach to avoid duplicates if upsert is tricky without unique constraints.
-    // Transaction doesn't have unique constraint besides ID, we will just use a predefined UUID for idempotency.
-    // Let's modify IDs to valid UUIDs.
+    // Use predefined UUID for idempotency
     const uuid = `00000000-0000-0000-0000-00000000000${tx.id.replace('t', '')}`;
     
     await prisma.transaction.upsert({
@@ -40,6 +46,8 @@ export async function seedTransaction() {
         type: tx.type,
         categoryId: tx.categoryId,
         note: tx.note,
+        source: tx.source,
+        imageUrl: tx.imageUrl,
       },
       create: {
         id: uuid,
@@ -48,7 +56,8 @@ export async function seedTransaction() {
         type: tx.type,
         categoryId: tx.categoryId,
         note: tx.note,
-        source: 'manual'
+        source: tx.source,
+        imageUrl: tx.imageUrl,
       },
     });
   }

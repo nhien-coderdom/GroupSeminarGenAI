@@ -18,7 +18,7 @@ apiClient.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   
-  config.metadata = { startTime: new Date().getTime() };
+  (config as any).metadata = { startTime: new Date().getTime() };
   console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
   console.time(`[API TIME] ${config.method?.toUpperCase()} ${config.url}`);
   
@@ -70,3 +70,5 @@ export const fetchWithAuth = async (endpoint: string, options: any = {}) => {
     throw new Error(error.response?.data?.message || error.message || 'Có lỗi xảy ra, vui lòng thử lại.');
   }
 };
+
+export default apiClient;

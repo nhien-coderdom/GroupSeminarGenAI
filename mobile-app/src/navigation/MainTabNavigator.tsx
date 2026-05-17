@@ -9,10 +9,10 @@ const Tab = createBottomTabNavigator();
 export default function MainTabNavigator() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: '#4F46E5' }}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Transactions" component={TransactionScreen} />
-      <Tab.Screen name="AI Assistant" component={AIAssistantScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Trang chủ' }} />
+      <Tab.Screen name="Transactions" component={TransactionScreen} options={{ title: 'Giao dịch' }} />
+      <Tab.Screen name="AI Assistant" component={AIAssistantScreen} options={{ title: 'Trợ lý AI' }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Cá nhân' }} />
     </Tab.Navigator>
   );
 }
