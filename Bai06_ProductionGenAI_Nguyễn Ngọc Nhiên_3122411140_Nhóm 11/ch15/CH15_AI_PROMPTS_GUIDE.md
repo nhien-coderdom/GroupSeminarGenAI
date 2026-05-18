@@ -10,6 +10,7 @@ Dùng file: `decorators_chatgpt.txt`
 
 ### Prompt to Copy & Paste into ChatGPT:
 
+{% raw %}
 ```
 CONTEXT: You are provided with a partial Python script in {{{ FIZZBUZZ_PRINTER }}}, 
 where some of the code is missing.
@@ -41,6 +42,7 @@ def print_fizzbuzz(limit: int) -> None:
 ```
 CODE: 
 ```
+{% endraw %}
 
 ### Expected Output from ChatGPT:
    Will generate decorators
@@ -58,6 +60,7 @@ Dùng file: `decorators_few_shot_chatgpt.txt`
 
 ### Prompt to Copy & Paste:
 
+{% raw %}
 ```
 CONTEXT: You are provided with a partial Python script enclosed with {{{ FIZZBUZZ_PRINTER }}} 
 where some of the code is missing, and examples of a good implementation 
@@ -132,6 +135,7 @@ def print_fizzbuzz(limit: int) -> None:
 
 CODE:
 ```
+{% endraw %}
 
 ### Expected Output from ChatGPT:
    Learns from examples
